@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{'layouts/' + ${template}}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+	<title th:text="${title} +' | Skote - Admin & Dashboard Template'"> </title>
+</head>
+<th:block layout:fragment="pagecss">
+	<!-- leaflet Css -->
+	<link th:href="@{/assets/libs/leaflet/leaflet.css}" rel="stylesheet" type="text/css" />
+</th:block>
+
+<body>
+
+	<!-- ============================================================== -->
+	<!-- Start right Content here -->
+	<!-- ============================================================== -->
+	<div layout:fragment="content">
+		<div class="main-content">
+
+			<div class="page-content">
+				<div class="container-fluid">
+
+					<!-- start page title -->
+					<div th:replace="page-title :: topnavbar(${title},${item},${title})"></div>
+					<!-- end page title -->
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title mb-4">Example</h4>
+									<div id="leaflet-map" class="leaflet-map"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title mb-4">Markers, circles and polygons</h4>
+									<div id="leaflet-map-marker" class="leaflet-map"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end row -->
+
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title mb-4">Working with popups</h4>
+									<div id="leaflet-map-popup" class="leaflet-map"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title mb-4">Markers with Custom Icons</h4>
+									<div id="leaflet-map-custom-icons" class="leaflet-map"></div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!-- end row -->
+
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title mb-4">Interactive Choropleth Map</h4>
+
+									<div id="leaflet-map-interactive-map" class="leaflet-map"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title mb-4">Layer Groups and Layers Control</h4>
+									<div id="leaflet-map-group-control" class="leaflet-map"></div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!--  end row -->
+				</div>
+				<!-- container-fluid -->
+			</div>
+			<!-- End Page-content -->
+
+			<!-- Start footer -->
+			<div th:replace="footer :: footer"></div>
+			<!-- end footer -->
+
+		</div>
+	</div>
+	<!-- end main content-->
+
+	<!-- END layout-wrapper -->
+
+	<th:block layout:fragment="script">
+		 <!-- leaflet plugin -->
+        <script th:src="@{/assets/libs/leaflet/leaflet.js}"></script>
+
+        <!-- leaflet map.init -->
+        <script th:src="@{/assets/js/pages/leaflet-us-states.js}"></script>
+        <script th:src="@{/assets/js/pages/leaflet-map.init.js}"></script>
+	</th:block>
+</body>
+
+</html>

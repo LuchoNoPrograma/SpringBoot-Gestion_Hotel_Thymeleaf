@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{'layouts/' + ${template}}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+
+<head>
+  <title>Sistema de Gestión Hotelera</title>
+</head>
+<th:block layout:fragment="pagecss">
+  <!-- DataTables -->
+  <link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css}" rel="stylesheet"
+        type="text/css"/>
+  <link th:href="@{/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css}" rel="stylesheet"
+        type="text/css"/>
+
+  <!--  Font awesome-->
+  <!--  <link rel="stylesheet" th:href="@{/assets/libs/font-awesome/css/all.min.css}"-->
+  <!--        type="text/css">-->
+
+  <link rel="stylesheet" th:href="@{/assets/css/icons.min.css}"
+        type="text/css">
+
+  <!-- Responsive datatable examples -->
+  <link th:href="@{/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet"
+        type="text/css"/>
+  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
+
+</th:block>
+<body>
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div layout:fragment="content">
+  <div class="main-content">
+
+    <div class="page-content">
+      <div class="container-fluid">
+
+        <!-- start page title -->
+        <div th:replace="page-title :: topnavbar(${title},${item},${subitem})"></div>
+        <!-- end page title -->
+
+        <div th:if="${exito}" class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="mdi mdi-check-all me-2"></i>
+          <span th:text="${exito}"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"
+                  aria-label="Close"></button>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <th:block th:if="${fragmento == 'tabla'}">
+                  <div class="d-flex flex-row-reverse mb-2">
+                    <a th:href="@{/empleado/formulario-registro}" class="btn btn-success">
+                      Registrar
+                      <i class="fas fa-pen-alt"></i>
+                    </a>
+                  </div>
+                  <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
+                    <thead>
+                    <tr>
+                      <th>Nombres</th>
+                      <th>Apellidos</th>
+                      <th>Documento</th>
+                      <th>Celular</th>
+                      <th>Operaciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="e : ${listaEmpleados}" th:with="p = ${e.persona}">
+                      <td th:text="${p.nombre}"></td>
+                      <td th:text="${p.apellido}"></td>
+                      <td th:text="${p.documentoIdentidad}"></td>
+                      <td th:text="${p.celular}"></td>
+                      <td>
+                        <a th:href="@{/empleado/formulario-modificar/{id}(id=${e.idEmpleado})}"
+                           class="btn btn-primary btn-rounded waves-effect waves-light" data-bs-toggle="tooltip"
+                           data-bs-placement="top" title="Modificar">
+                          <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <form th:action="@{/empleado/eliminar}" method="POST" class="d-inline">
+                          <input type="hidden" th:value="${e.idEmpleado}" name="idEmpleado">
+                          <button type="submit"
+                             class="btn btn-danger btn-rounded waves-effect waves-light
+                                  btn-eliminar" data-bs-toggle="tooltip"
+                             data-bs-placement="top" title="Eliminar">
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </th:block>
+                <th:block th:if="${fragmento} == 'formulario'">
+                  <form th:action="@{${tipoFormulario == 'registrar'? '/empleado/registrar': '/empleado/modificar'}}"
+                        th:object="${empleado}" method="post">
+
+                    <input type="hidden" th:field="*{idEmpleado}">
+                    <input type="hidden" th:field="*{persona.idPersona}">
+
+                    <div class="row mb-4">
+                      <h4 class="fw-bold">Datos personales</h4>
+                      <div class="col-lg-4 mb-2">
+                        <label for="nombre" class="form-label">Nombres: </label>
+                        <input type="text" class="form-control" id="nombre"
+                               placeholder="..."
+                               th:field="*{persona.nombre}">
+                      </div>
+                      <div class="col-lg-4 mb-2">
+                        <label for="apellido" class="form-label">Apellidos: </label>
+                        <input type="text" class="form-control" id="apellido"
+                               placeholder="..."
+                               th:field="*{persona.apellido}">
+                      </div>
+                      <div class="col-lg-4 mb-2">
+                        <label for="documentoIdentidad" class="form-label">Documento de identidad: </label>
+                        <input type="text" class="form-control" id="documentoIdentidad"
+                               placeholder="..."
+                               th:field="*{persona.documentoIdentidad}">
+                      </div>
+                    </div>
+
+                    <div class="row mb-4">
+                      <div class="col-lg-3 mb-2">
+                        <label for="nacionalidad" class="form-label">Nacionalidad: </label>
+                        <input type="text" class="form-control" id="nacionalidad"
+                               placeholder="..."
+                               th:field="*{persona.nacionalidad}">
+                      </div>
+                      <div class="col-lg-3 mb-2">
+                        <label for="procedencia" class="form-label">Ciudad de procedencia: </label>
+                        <input type="text" class="form-control" id="procedencia"
+                               placeholder="..."
+                               th:field="*{persona.procedencia}">
+                      </div>
+                      <div class="col-lg-3 mb-2">
+                        <label for="fechaNacimiento" class="form-label">Fecha de nacimiento: </label>
+                        <input type="date" class="form-control" id="fechaNacimiento"
+                               placeholder="..."
+                               th:field="*{persona.fechaNacimiento}">
+                      </div>
+                      <div class="col-lg-3 mb-2">
+                        <label for="sexo" class="form-label">Sexo: </label>
+                        <select type="text" class="form-select" id="sexo"
+                                th:field="*{persona.sexo}">
+                          <option selected hidden value="">--SELECCIONE--</option>
+                          <option th:each="s : ${listaSexos}"
+                                  th:value="${s}" th:text="${s.nombreFormal}"></option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row mb-4">
+                      <div class="col-lg-4 mb-2">
+                        <label for="estadoCivil" class="form-label">Estado civil: </label>
+                        <select type="text" class="form-select" id="estadoCivil"
+                                th:field="*{persona.estadoCivil}">
+                          <option selected hidden value="">--SELECCIONE--</option>
+                          <option th:each="e : ${listaEstadosCiviles}"
+                                  th:value="${e}" th:text="${e.nombreFormal}"></option>
+                        </select>
+                      </div>
+                      <div class="col-lg-4 mb-2">
+                        <label for="profesion" class="form-label">Profesión: </label>
+                        <input type="text" class="form-control" id="profesion"
+                               placeholder="..."
+                               th:field="*{persona.profesion}">
+                      </div>
+                      <div class="col-lg-4 mb-2">
+                        <label for="celular" class="form-label">Celular: </label>
+                        <input type="text" class="form-control" id="celular"
+                               placeholder="..."
+                               th:field="*{persona.celular}">
+                      </div>
+                    </div>
+
+                    <div class="row mb-4">
+                      <h4 class="fw-bold">Datos del empleado</h4>
+                      <div class="col-lg-4 mb-2">
+                        <label for="cargo" class="form-label">Cargo: </label>
+                        <select type="text" class="form-select" id="cargo"
+                                th:field="*{cargo}">
+                          <option selected hidden value="">--SELECCIONE--</option>
+                          <option th:each="c : ${listaCargos}"
+                                  th:value="${c}" th:text="${c.nombreFormal}"></option>
+                        </select>
+                      </div>
+
+                      <div class="col-lg-4 mb-2">
+                        <label for="sueldo" class="form-label">Sueldo: </label>
+                        <input type="text" class="form-control" id="sueldo"
+                               placeholder="..."
+                               th:field="*{sueldo}">
+                      </div>
+
+                      <div class="col-lg-3 mb-2">
+                        <label for="fechaContrato" class="form-label">Fecha de contrato: </label>
+                        <input type="datetime-local" class="form-control" id="fechaContrato"
+                               placeholder="..."
+                               th:field="*{fechaContrato}">
+                      </div>
+
+                    </div>
+
+
+                    <div class="d-flex flex-row-reverse">
+                      <button type="submit"
+                              class="btn waves-effect btn-label waves-light"
+                              th:classappend="${tipoFormulario == 'registrar' ? 'btn-success' : 'btn-primary'}">
+                        <i class="bx bx-paper-plane label-icon"></i>
+                        <span th:text="${tipoFormulario == 'registrar' ? 'Registrar' : 'Modificar'}"></span>
+                      </button>
+                    </div>
+                  </form>
+                </th:block>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+    <!-- Start footer -->
+    <div th:replace="footer :: footer"></div>
+    <!-- end footer -->
+  </div>
+</div>
+<!-- end main content-->
+
+<!-- END layout-wrapper -->
+
+<th:block layout:fragment="script">
+  <script th:src="@{/assets/libs/apexcharts/apexcharts.min.js}"></script>
+
+  <!-- Required datatable js -->
+  <script th:src="@{/assets/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+  <script th:src="@{/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <!-- Buttons examples -->
+  <script th:src="@{/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js}"></script>
+  <script th:src="@{/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js}"></script>
+  <script th:src="@{/assets/libs/jszip/jszip.min.js}"></script>
+  <script th:src="@{/assets/libs/pdfmake/build/pdfmake.min.js}"></script>
+  <script th:src="@{/assets/libs/pdfmake/build/vfs_fonts.js}"></script>
+  <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.html5.min.js}"></script>
+  <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.print.min.js}"></script>
+  <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js}"></script>
+
+  <!-- Responsive examples -->
+  <script th:src="@{/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js}"></script>
+  <script th:src="@{/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js}"></script>
+
+  <!-- Font awesome -->
+  <!--  <script th:src="@{/assets/libs/font-awesome/js/all.min.js}"></script>-->
+  <!-- dashboard init -->
+  <script th:src="@{/assets/libs/sweetalert2/sweetalert2.min.js}"></script>
+  <script th:src="@{/assets/js/pages/dashboard.init.js}"></script>
+  <script th:src="@{/assets/js/pages/fontawesome.init.js}"></script>
+  <script th:inline="javascript">
+      $(document).ready(function () {
+          $("#datatable").DataTable({
+              language: {
+                  url: "/assets/libs/datatables.net/js/dataTable-es-ES.json"
+              },
+              lengthMenu: [10, 20, 50, 100]
+          });
+
+          $('.btn-eliminar').on('click', function(e){
+              e.preventDefault();
+              Swal.fire({
+                  icon: 'warning',
+                  title: 'Estas seguro?',
+                  text: 'El registro sera eliminado!',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Si, eliminar!',
+                  cancelButtonText: 'Cancelar'
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      Swal.fire({
+                          title: 'El formulario esta siendo procesado',
+                          text: 'Por favor, espere...',
+                          allowOutsideClick: false,
+                          showConfirmButton: false,
+                          onBeforeOpen: () => {
+                              Swal.showLoading();
+                              $(this).closest('form').submit()
+                          }
+                      });
+                  }
+              })
+          })
+      })
+  </script>
+</th:block>
+
+</body>
+
+</html>

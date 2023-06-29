@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{'layouts/' + ${template}}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+	<title th:text="${title} +' | Skote - Admin & Dashboard Template'"> </title>
+</head>
+<th:block layout:fragment="pagecss">
+	<!-- Plugins css -->
+	<link th:href="@{/assets/libs/dropzone/min/dropzone.min.css}" rel="stylesheet" type="text/css" />
+
+</th:block>
+
+<body>
+
+	<!-- ============================================================== -->
+	<!-- Start right Content here -->
+	<!-- ============================================================== -->
+	<div layout:fragment="content">
+		<div class="main-content">
+
+			<div class="page-content">
+				<div class="container-fluid">
+
+					<!-- start page title -->
+					<div th:replace="page-title :: topnavbar(${title},${item},${title})"></div>
+					<!-- end page title -->
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+
+									<h4 class="card-title">Dropzone</h4>
+									<p class="card-title-desc">DropzoneJS is an open source library
+										that provides drag’n’drop file uploads with image previews.
+									</p>
+
+									<div>
+										<form action="#" class="dropzone">
+											<div class="fallback">
+												<input name="file" type="file" multiple="multiple">
+											</div>
+											<div class="dz-message needsclick">
+												<div class="mb-3">
+													<i class="display-4 text-muted bx bxs-cloud-upload"></i>
+												</div>
+
+												<h4>Drop files here or click to upload.</h4>
+											</div>
+										</form>
+									</div>
+
+									<div class="text-center mt-4">
+										<button type="button" class="btn btn-primary waves-effect waves-light">Send
+											Files</button>
+									</div>
+								</div>
+							</div>
+						</div> <!-- end col -->
+					</div>
+					<!--  end row -->
+				</div>
+				<!-- container-fluid -->
+			</div>
+			<!-- End Page-content -->
+
+			<!-- Start footer -->
+			<div th:replace="footer :: footer"></div>
+			<!-- end footer -->
+
+		</div>
+	</div>
+	<!-- end main content-->
+
+	<!-- END layout-wrapper -->
+
+	<th:block layout:fragment="script">
+		<!-- Plugins js -->
+		<script th:src="@{/assets/libs/dropzone/min/dropzone.min.js}"></script>
+	</th:block>
+
+</body>
