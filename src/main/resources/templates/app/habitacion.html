@@ -23,7 +23,7 @@
   <!-- Responsive datatable examples -->
   <link th:href="@{/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet"
         type="text/css"/>
-  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css"/>
 
 </th:block>
 <body>
@@ -49,10 +49,54 @@
         </div>
 
         <th:block th:if="${fragmento == 'cartas'}">
+          <div class="d-flex gap-2 justify-content-end">
+            <div class="card bg-info text-white-50">
+              <a th:href="@{/habitacion/lista}">
+                <div class="card-body">
+                  <h5 class="m-0 text-white"><i class="mdi mdi-bullseye-arrow me-3"></i>Todos
+                  </h5>
+                </div>
+              </a>
+            </div>
+            <div class="card bg-success text-white-50">
+              <a th:href="@{/habitacion/lista(estado='DISPONIBLE')}">
+                <div class="card-body">
+                  <h5 class="m-0 text-white"><i class="mdi mdi-bullseye-arrow me-3"></i>Disponibles
+                  </h5>
+                </div>
+              </a>
+            </div>
+            <div class="card bg-dark text-white-50">
+              <a th:href="@{/habitacion/lista(estado='OCUPADO')}">
+                <div class="card-body">
+                  <h5 class="m-0 text-white"><i class="mdi mdi-bullseye-arrow me-3"></i>Ocupados
+                  </h5>
+                </div>
+              </a>
+            </div>
+            <div class="card bg-primary text-white-50">
+              <a th:href="@{/habitacion/lista(estado='RESERVADO')}">
+                <div class="card-body">
+                  <h5 class="m-0 text-white"><i class="mdi mdi-bullseye-arrow me-3"></i>Reservados
+                  </h5>
+                </div>
+              </a>
+            </div>
+            <div class="card bg-warning text-white-50">
+              <a th:href="@{/habitacion/lista(estado='EN_MANTENIMIENTO')}">
+                <div class="card-body">
+                  <h5 class="m-0 text-white"><i class="mdi mdi-bullseye-arrow me-3"></i>En mantenimiento
+                  </h5>
+                </div>
+              </a>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-12">
               <div class="d-flex flex-row-reverse mb-2">
-                <a th:href="@{/habitacion/formulario-registrar}" class="btn btn-label btn-success waves-effect waves-light">
+                <a th:href="@{/habitacion/formulario-registrar}"
+                   class="btn btn-label btn-success waves-effect waves-light">
                   Registrar
                   <i class="label-icon fas fa-pen-alt"></i>
                 </a>
@@ -73,7 +117,9 @@
                   <p class="card-text">
                     Capacidad de: <span class="fw-bold" th:text="${h.capacidadHabitacion}"></span> Personas
                   </p>
-                  <a href="javascript: void(0);" class="btn btn-primary">Ver clientes</a>
+                  <a th:href="@{/cliente/habitacion/{idHabitacion}/actual(idHabitacion=${h.idHabitacion})}" class="btn btn-primary">
+                    Ver clientes
+                  </a>
                 </div>
                 <div class="card-footer bg-transparent border-top text-muted">
                   <th:block th:switch="${h.estadoHabitacion.name()}">
@@ -208,7 +254,7 @@
               lengthMenu: [10, 20, 50, 100]
           });
 
-          $('.btn-eliminar').on('click', function(e){
+          $('.btn-eliminar').on('click', function (e) {
               e.preventDefault();
               Swal.fire({
                   icon: 'warning',

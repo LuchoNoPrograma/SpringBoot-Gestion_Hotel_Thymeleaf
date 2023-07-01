@@ -2,6 +2,7 @@ package com.hotel.hotel.modelo.servicio.impls;
 
 import com.hotel.hotel.modelo.dao.IHabitacionDao;
 import com.hotel.hotel.modelo.entidad.Habitacion;
+import com.hotel.hotel.modelo.enums.EstadoHabitacion;
 import com.hotel.hotel.modelo.servicio.interfaces.IHabitacionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -30,7 +31,7 @@ public class HabitacionServiceImpl implements IHabitacionService {
   }
 
   @Override
- public List<Habitacion> findAllByEstadoHabitacion(String estadoHabitacion) {
-    return findAllByEstadoHabitacion(estadoHabitacion);
+  public List<Habitacion> findAllByEstadoHabitacion(EstadoHabitacion estadoHabitacion) {
+    return habitacionDao.findAllByEstadoHabitacion(estadoHabitacion);
   }
 }

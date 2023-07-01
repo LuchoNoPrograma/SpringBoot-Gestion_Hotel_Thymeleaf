@@ -1,7 +1,7 @@
 package com.hotel.hotel.modelo.enums;
 
 public enum EstadoHabitacion {
-  DISPONIBLE("Activo"),
+  DISPONIBLE("Disponible"),
   RESERVADO("Reservado"),
   OCUPADO("Ocupado"),
   EN_MANTENIMIENTO("En mantenimiento");

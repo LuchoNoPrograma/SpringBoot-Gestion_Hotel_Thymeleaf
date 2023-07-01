@@ -9,11 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,11 +22,18 @@ public class HabitacionController {
   private final IHabitacionService habitacionService;
   private final ITipoHabitacionService tipoHabitacionService;
 
-  @GetMapping("/inicio")
-  public String index(Model model){
+  @GetMapping("/lista")
+  public String index(@RequestParam(value = "estado", required = false) EstadoHabitacion estadoHabitacion,Model model){
+    List<Habitacion> listaHabitaciones;
+    if(estadoHabitacion != null){
+      listaHabitaciones = habitacionService.findAllByEstadoHabitacion(estadoHabitacion);
+    }else{
+      listaHabitaciones = habitacionService.findAll(Sort.by("nroHabitacion"));
+    }
+
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Lista de empleados");
-    model.addAttribute("listaHabitaciones", habitacionService.findAll(Sort.by(Sort.Order.by("nroHabitacion"))));
+    model.addAttribute("listaHabitaciones", listaHabitaciones);
     model.addAttribute("fragmento", "cartas");
     return "app/habitacion";
   }

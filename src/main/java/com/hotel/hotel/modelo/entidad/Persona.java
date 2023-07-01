@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hotel.hotel.modelo.enums.EstadoCivil;
 import com.hotel.hotel.modelo.enums.Sexo;
 import lombok.Getter;
@@ -12,18 +15,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "persona")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Persona extends Auditoria{
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "persona")
-    private List<Cliente> clientes;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "persona")
-    private List<Empleado> empleados;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPersona;
