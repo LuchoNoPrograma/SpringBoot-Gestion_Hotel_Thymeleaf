@@ -17,6 +17,6 @@ import lombok.Setter;
 public class TipoDocumento extends Auditoria{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idFactura;
-    private String tipoFactura;
+    private Long idTipoDocumento;
+    private String tipoDocumento;
 }

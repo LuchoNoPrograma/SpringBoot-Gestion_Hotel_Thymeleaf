@@ -36,7 +36,6 @@ public class Habitacion extends Auditoria{
     private Long idHabitacion;
     private Integer nroHabitacion;
     private Byte capacidadHabitacion;
-    private Float precioHabitacion;
     private String descripcion;
 
     @Enumerated(EnumType.STRING)

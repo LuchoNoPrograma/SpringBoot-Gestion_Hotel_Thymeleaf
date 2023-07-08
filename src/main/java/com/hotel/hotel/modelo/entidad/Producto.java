@@ -15,9 +15,10 @@ public class Producto extends Auditoria{
     @JoinColumn(name = "hotel_id_hotel")
     private Hotel hotel;
 
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "producto_id_producto")
-    private TipoProducto producto;
+    @JoinColumn(name = "tipo_producto_id_tipo_producto")
+    private TipoProducto tipoProducto;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -39,7 +39,7 @@ public class ClienteReservaController {
     model.addAttribute("title", "Administrar clientes");
     Sort orden = Sort.by("fechaRegistro").ascending();
 
-    model.addAttribute("listaPersonas", personaService.fin);
+    model.addAttribute("listaPersonas", personaService.findAllDistinctEliminado(Sort.by("nombre"))  );
     model.addAttribute("listaClientes", clienteService.findAll(orden));
     model.addAttribute("listaHabitacionesDisponibles", habitacionService.findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion.DISPONIBLE));
 
