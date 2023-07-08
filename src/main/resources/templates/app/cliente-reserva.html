@@ -11,6 +11,7 @@
   <link th:href="@{/assets/libs/@fullcalendar/core/main.min.css}" rel="stylesheet" type="text/css"/>
   <link th:href="@{/assets/libs/@fullcalendar/bootstrap/main.min.css}" rel="stylesheet" type="text/css"/>
   <link th:href="@{/assets/libs/@fullcalendar/timegrid/main.min.css}" rel="stylesheet" type="text/css"/>
+  <link th:href="@{/assets/libs/select2/css/select2.min.css}" rel="stylesheet" type="text/css"/>
 </th:block>
 <body>
 
@@ -56,7 +57,7 @@
                     </div>
 
                     <div class="row justify-content-center mt-5">
-                      <img src="assets/images/verification-img.png" alt=""
+                      <img th:src="@{/assets/images/verification-img.png}" alt=""
                            class="img-fluid d-block">
                     </div>
                   </div>
@@ -75,17 +76,20 @@
 
             <div style='clear:both'></div>
 
-
             <!-- Add New Event MODAL -->
             <div class="modal fade" id="event-modal" tabindex="-1">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-header py-3 px-4 border-bottom-0">
-                    <h5 class="modal-title" id="modal-title">Event</h5>
+                    <div>
+                      <h5 class="modal-title" id="modal-title">Registro</h5>
+                    </div>
 
+                    <div class="row mx-2 ajax-select mt-lg-0">
+                      <select class="form-select" id="select-buscar-personas" style="width: 260px"></select>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                             aria-hidden="true"></button>
-
                   </div>
                   <div class="modal-body p-4">
                     <form class="needs-validation" name="event-form" id="form-event" novalidate>
@@ -119,6 +123,7 @@
                             <div class="invalid-feedback">El documento es obligatorio</div>
                           </div>
                         </div>
+
                         <div class="col-md-4">
                           <div class="mb-3">
                             <label for="cliente-habitacion" class="form-label">Habitación:</label>
@@ -194,11 +199,13 @@
   <script th:src="@{/assets/libs/@fullcalendar/daygrid/main.min.js}"></script>
   <script th:src="@{/assets/libs/@fullcalendar/timegrid/main.min.js}"></script>
   <script th:src="@{/assets/libs/@fullcalendar/interaction/main.min.js}"></script>
+  <script th:src="@{/assets/libs/select2/js/select2.min.js}"></script>
+  <script th:src="@{/assets/libs/select2/js/select2es.min.js}"></script>
 
   <!-- Calendar init -->
   <!--  <script th:src="@{/assets/js/pages/calendars-full.init.js}"></script>-->
   <script th:inline="javascript">
-      // Obtenemos las referencias a los elementos del DOM
+    $(document).ready(function () {
       let eventModal = $("#event-modal");
       let modalTitle = $("#modal-title");
       let formEvent = $("#form-event");
@@ -210,35 +217,35 @@
 
       // Configuramos el calendario
       let calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
-          plugins: ["bootstrap", "interaction", "dayGrid", "timeGrid"],
-          editable: true,
-          eventDurationEditable: true, // Permitir el cambio de duración
-          droppable: true,
-          selectable: true,
-          defaultView: "dayGridMonth",
-          themeSystem: "bootstrap",
-          header: {
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth"
-          },
-          eventClick: function (event) {
-              eventModal.modal("show");
-              formEvent[0].reset();
-              let selectedEvent = event.event;
-              let cliente = selectedEvent.extendedProps.cliente;
-              let {persona, habitacion} = cliente;
-              $('#cliente-nombre').val(persona.nombre);
-              $('#cliente-apellido').val(persona.apellido);
-              $('#cliente-di').val(persona.documentoIdentidad);
-              $('#cliente-habitacion').val(habitacion.idHabitacion);
-              $("#estado-habitacion").val(habitacion.estadoHabitacion);
-              modalTitle.text("Editar datos");
-          },
-          dateClick: function (date) {
-              showModal(date);
-          },
-          events: []
+        plugins: ["bootstrap", "interaction", "dayGrid", "timeGrid"],
+        editable: true,
+        eventDurationEditable: true, // Permitir el cambio de duración
+        droppable: true,
+        selectable: true,
+        defaultView: "dayGridMonth",
+        themeSystem: "bootstrap",
+        header: {
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth"
+        },
+        eventClick: function (event) {
+          eventModal.modal("show");
+          formEvent[0].reset();
+          let selectedEvent = event.event;
+          let cliente = selectedEvent.extendedProps.cliente;
+          let {persona, habitacion} = cliente;
+          $('#cliente-nombre').val(persona.nombre);
+          $('#cliente-apellido').val(persona.apellido);
+          $('#cliente-di').val(persona.documentoIdentidad);
+          $('#cliente-habitacion').val(habitacion.idHabitacion);
+          $("#estado-habitacion").val(habitacion.estadoHabitacion);
+          modalTitle.text("Editar datos");
+        },
+        dateClick: function (date) {
+          showModal(date);
+        },
+        events: []
       });
 
       // Inicializamos el calendario
@@ -246,120 +253,173 @@
 
       // Manejador del envío del formulario
       formEvent.on("submit", async function (event) {
+        event.preventDefault();
+        let inputs = $("#form-event :input");
+
+        let nombre = $('#cliente-nombre').val();
+        let apellido = $('#cliente-apellido').val();
+        let di = $('#cliente-di').val();
+        let idHabitacion = $("#cliente-habitacion").val();
+        let colorHabitacion = $("#estado-habitacion").find(":selected").attr('data-color');
+        console.log(colorHabitacion)
+
+        let estadoHabitacion = $("#estado-habitacion").val();
+
+        if (!validationElements[0].checkValidity()) {
           event.preventDefault();
-          let inputs = $("#form-event :input");
-
-          let nombre = $('#cliente-nombre').val();
-          let apellido = $('#cliente-apellido').val();
-          let di = $('#cliente-di').val();
-          let idHabitacion = $("#cliente-habitacion").val();
-          let colorHabitacion = $("#estado-habitacion").find(":selected").attr('data-color');
-          console.log(colorHabitacion)
-
-          let estadoHabitacion = $("#estado-habitacion").val();
-
-          if (!validationElements[0].checkValidity()) {
-              event.preventDefault();
-              event.stopPropagation();
-              validationElements[0].classList.add("was-validated");
-          } else {
-              let cliente = {
-                  fechaRegistro: selectedEvent.date,
-                  persona: {
-                      nombre: nombre,
-                      apellido: apellido,
-                      documentoIdentidad: di
-                  },
-                  habitacion: {
-                      idHabitacion: idHabitacion,
-                      estadoHabitacion: estadoHabitacion
-                  }
-              }
-
-              console.log(cliente)
-              let eventData = {
-                  title: nombre + ' ' + apellido,
-                  start: selectedEvent.date,
-                  allDay: selectedEvent.allDay,
-                  className: colorHabitacion,
-                  extendedProps: {
-                      cliente: cliente
-                  }
-              };
-
-              try {
-                  const response = await fetch("/cliente/api/registrar", {
-                      method: "POST",
-                      headers: {
-                          "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify(cliente),
-                  })
-
-                  const data = await response.json();
-
-                  console.log(data)
-                  eventData.extendedProps.cliente = data;
-                  calendar.addEvent(eventData);
-                  eventModal.modal("hide");
-              } catch (error) {
-                  console.log(error);
-              }
+          event.stopPropagation();
+          validationElements[0].classList.add("was-validated");
+        } else {
+          let cliente = {
+            fechaRegistro: selectedEvent.date,
+            persona: {
+              nombre: nombre,
+              apellido: apellido,
+              documentoIdentidad: di
+            },
+            habitacion: {
+              idHabitacion: idHabitacion,
+              estadoHabitacion: estadoHabitacion
+            }
           }
+
+          console.log(cliente)
+          let eventData = {
+            title: nombre + ' ' + apellido,
+            start: selectedEvent.date,
+            allDay: selectedEvent.allDay,
+            className: colorHabitacion,
+            extendedProps: {
+              cliente: cliente
+            }
+          };
+
+          try {
+            const response = await fetch("/cliente/api/registrar", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(cliente),
+            })
+
+            const data = await response.json();
+
+            console.log(data)
+            eventData.extendedProps.cliente = data;
+            calendar.addEvent(eventData);
+            eventModal.modal("hide");
+          } catch (error) {
+            console.log(error);
+          }
+        }
       });
 
       $("#btn-delete-event").on("click", function (event) {
-          if (selectedEvent) {
-              selectedEvent.remove();
-              selectedEvent = null;
-              eventModal.modal("hide");
-          }
+        if (selectedEvent) {
+          selectedEvent.remove();
+          selectedEvent = null;
+          eventModal.modal("hide");
+        }
       });
 
       $("#btn-new-event").on("click", function (event) {
-          showModal({date: new Date(), allDay: true});
+        showModal({date: new Date(), allDay: true});
       });
 
       function showModal(date) {
-          eventModal.modal("show");
-          formEvent.removeClass("was-validated");
-          formEvent[0].reset();
-          $('#cliente-nombre').val();
-          $('#cliente-apellido').val();
-          $('#cliente-di').val();
-          modalTitle.text("Agregar registro");
-          selectedEvent = date;
+        eventModal.modal("show");
+        formEvent.removeClass("was-validated");
+        formEvent[0].reset();
+        $('#cliente-nombre').val();
+        $('#cliente-apellido').val();
+        $('#cliente-di').val();
+        modalTitle.text("Agregar registro");
+        selectedEvent = date;
       }
 
       //PETICION AJAX
       fetch("/cliente/api/lista")
-          .then(function (response) {
-              return response.json();
-          })
-          .then(function (clientes) {
-              console.log(clientes);
+              .then(function (response) {
+                return response.json();
+              })
+              .then(function (clientes) {
+                console.log(clientes);
 
-              let events = [];
-              for (let i = 0; i < clientes.length; i++) {
+                let events = [];
+                for (let i = 0; i < clientes.length; i++) {
                   let cliente = clientes[i];
                   let color;
-                  if(cliente.habitacion.estadoHabitacion === 'RESERVADO'){
-                      color = 'bg-primary'
-                  }else if(cliente.habitacion.estadoHabitacion === 'OCUPADO'){
-                      color = 'bg-warning'
+                  if (cliente.habitacion.estadoHabitacion === 'RESERVADO') {
+                    color = 'bg-primary'
+                  } else if (cliente.habitacion.estadoHabitacion === 'OCUPADO') {
+                    color = 'bg-warning'
                   }
                   events.push({
-                      title: cliente.persona.nombre + ' ' + cliente.persona.apellido,
-                      start: new Date(cliente.fechaRegistro),
-                      className: color,
-                      extendedProps: {
-                          cliente: cliente
-                      }
+                    title: cliente.persona.nombre + ' ' + cliente.persona.apellido,
+                    start: new Date(cliente.fechaRegistro),
+                    className: color,
+                    extendedProps: {
+                      cliente: cliente
+                    }
                   });
-              }
-              calendar.addEventSource(events);
-          });
+                }
+                calendar.addEventSource(events);
+              });
 
+
+      $("#select-buscar-personas").select2({
+        language: 'es',
+        dropdownParent: $('#event-modal')
+      });
+
+      /*$(".buscar-personas-ajax").select2({
+        ajax: {
+          url: "/api/persona/pageable",
+          dataType: "json",
+          delay: 1000,
+          data: function (params) {
+            return {
+              q: params.term,
+              page: params.page
+            };
+          },
+          processResults: function (data, params) {
+            console.log(data)
+            console.log(params)
+            return (params.page = params.page || 1), {
+              results: data.items,
+              pagination: {more: 30 * params.page < data.total_count}
+            };
+          },
+          cache: true
+        },
+        placeholder: "Buscar personas...",
+        minimumInputLength: 1,
+        templateResult: function (result) {
+          if (result.loading) {
+            return result.text;
+          }
+
+          var t = $(`
+  <div class='select2-result-repository clearfix'>
+    <div class='select2-result-repository__meta'>
+      <div class='select2-result-repository__title'></div>
+      <div class='select2-result-repository__description'></div>
+    </div>
+  </div>`);
+
+          return (
+                  t.find(".select2-result-repository__title").text(result.nombreCompleto),
+                  t.find(".select2-result-repository__description").text(result.documentoIdentidad)
+          )
+        },
+        templateSelection: function (result) {
+          return result.nombreCompleto || result.text;
+        }
+      });
+      */
+    });
   </script>
 </th:block>
 </body>

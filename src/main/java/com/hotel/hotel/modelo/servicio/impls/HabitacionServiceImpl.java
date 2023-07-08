@@ -26,12 +26,12 @@ public class HabitacionServiceImpl implements IHabitacionService {
   }
 
   @Override
-  public List<Habitacion> findAll(Sort sort) {
-    return habitacionDao.findAll(sort);
+  public List<Habitacion> findAllDistinctEliminado(Sort sort) {
+    return habitacionDao.findAllDistinctEliminado(sort);
   }
 
   @Override
-  public List<Habitacion> findAllByEstadoHabitacion(EstadoHabitacion estadoHabitacion) {
-    return habitacionDao.findAllByEstadoHabitacion(estadoHabitacion);
+  public List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion) {
+    return habitacionDao.findAllDistinctEliminadoByEstadoHabitacion(estadoHabitacion);
   }
 }

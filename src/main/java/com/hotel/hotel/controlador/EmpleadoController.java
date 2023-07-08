@@ -21,7 +21,7 @@ public class EmpleadoController {
   private final IEmpleadoService empleadoService;
   private final IPersonaService personaService;
 
-  @GetMapping("/inicio")
+  @GetMapping("/lista")
   public String inicio(Model model) {
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Lista de empleados");

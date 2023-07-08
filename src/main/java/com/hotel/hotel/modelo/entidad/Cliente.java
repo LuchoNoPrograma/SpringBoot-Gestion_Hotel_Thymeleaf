@@ -24,16 +24,16 @@ public class Cliente extends Auditoria{
     private Persona persona;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_titular_id_cliente")
     private Cliente clienteTitular;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "clienteTitular")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clienteTitular")
     private List<Cliente> clientesBeneficiados;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cliente")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
     private List<ClienteDocumento> clienteDocumentos;
 
     @ManyToOne(fetch = FetchType.LAZY)

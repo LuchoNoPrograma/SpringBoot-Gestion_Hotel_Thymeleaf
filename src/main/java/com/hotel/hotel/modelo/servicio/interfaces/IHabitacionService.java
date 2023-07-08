@@ -11,7 +11,7 @@ public interface IHabitacionService {
 
   Habitacion findById(Long id);
 
-  List<Habitacion> findAll(Sort sort);
+  List<Habitacion> findAllDistinctEliminado(Sort sort);
 
-  List<Habitacion> findAllByEstadoHabitacion(EstadoHabitacion estadoHabitacion);
+  List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion);
 }

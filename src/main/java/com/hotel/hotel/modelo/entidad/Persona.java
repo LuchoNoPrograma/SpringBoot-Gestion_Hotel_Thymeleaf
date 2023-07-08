@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hotel.hotel.modelo.enums.EstadoCivil;
 import com.hotel.hotel.modelo.enums.Sexo;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,8 @@ public class Persona extends Auditoria{
     private Long idPersona;
     private String nombre;
     private String apellido;
+
+    @Column(unique = true)
     private String documentoIdentidad;
     private String nacionalidad;
     private String procedencia;
@@ -42,4 +45,13 @@ public class Persona extends Auditoria{
 
     private String profesion;
     private String celular;
+
+    @Transient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private String nombreCompleto;
+
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
 }

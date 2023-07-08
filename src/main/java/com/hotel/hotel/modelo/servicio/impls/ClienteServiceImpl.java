@@ -27,7 +27,6 @@ public class ClienteServiceImpl implements IClienteService {
   @Transactional
   @Override
   public Cliente saveWithPersonaAndHabitacion(Cliente cliente){
-    System.out.println(cliente.getHabitacion().getNroHabitacion());
     habitacionDao.save(cliente.getHabitacion());
     personaDao.save(cliente.getPersona());
     return clienteDao.save(cliente);

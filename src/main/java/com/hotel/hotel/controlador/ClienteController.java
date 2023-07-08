@@ -11,6 +11,7 @@ import com.hotel.hotel.modelo.servicio.interfaces.IClienteService;
 import com.hotel.hotel.modelo.servicio.interfaces.IHabitacionService;
 import com.hotel.hotel.modelo.servicio.interfaces.IPersonaService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Request;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/cliente")
@@ -38,43 +41,31 @@ public class ClienteController {
   }
 
   @GetMapping("/formulario-registrar")
-  public String formularioRegistro(@RequestParam("titular") boolean tipo,@RequestParam("nro") String documentoIdentidad,
+  public String formularioRegistro(@RequestParam("titular") boolean tipo, @RequestParam("nro") String documentoIdentidad,
+                                   @RequestParam("id") Long idHabitacion,
                                    @ModelAttribute Cliente cliente, Model model) {
-
+    //True para titular, false para beneficiario
     Persona persona = personaService.findByDocumentoIdentidad(documentoIdentidad);
+    if (persona == null) {
+      persona = new Persona();
+    }
+
     persona.setDocumentoIdentidad(documentoIdentidad);
     cliente.setPersona(persona);
+    cliente.setHabitacion(habitacionService.findById(idHabitacion));
 
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Registrar nuevo cliente");
     model.addAttribute("listaEstadosCiviles", EstadoCivil.values());
-    model.addAttribute("listaHabitacionesDisponibles", habitacionService.findAllByEstadoHabitacion(EstadoHabitacion.DISPONIBLE));
     model.addAttribute("listaSexos", Sexo.values());
     model.addAttribute("cliente", cliente);
     model.addAttribute("titular", tipo);
+    if (!tipo) {
+      model.addAttribute("listaTitulares", clienteService.findAllClientesTitularesOcupandoHabitacion());
+    }
 
     model.addAttribute("fragmento", "formulario");
     model.addAttribute("tipoFormulario", "registrar");
-    return "app/cliente";
-  }
-
-  @GetMapping("/registrar")
-  public String registrar(@ModelAttribute Cliente cliente, RedirectAttributes flash) {
-    cliente.getHabitacion().setEstadoHabitacion(EstadoHabitacion.OCUPADO);
-    clienteService.saveWithPersonaAndHabitacion(cliente);
-    flash.addFlashAttribute("exito", "Cliente registrado exitosamente");
-    return "redirect:/cliente/inicio";
-  }
-
-  @GetMapping("/titular/{idClienteTitular}/habitacion/{idHabitacion}")
-  public String clientesPorHabitacion(Model model, @PathVariable Long idHabitacion, @PathVariable Long idClienteTitular) {
-    Habitacion habitacion = habitacionService.findById(idHabitacion);
-
-    model.addAttribute("template", "layout");
-    model.addAttribute("title", "Clientes en habitacion: " + habitacion.getNroHabitacion());
-    model.addAttribute("listaClientes", clienteService.findAllByIdHabitacionAndIdClienteTitular(idHabitacion, idClienteTitular));
-    model.addAttribute("fragmento", "tabla");
-
     return "app/cliente";
   }
 
@@ -85,58 +76,64 @@ public class ClienteController {
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Clientes en habitacion: " + habitacion.getNroHabitacion());
     model.addAttribute("listaClientes", clienteService.findAllOcupandoHabitacionActualmenteByIdHabitacion(idHabitacion));
+    model.addAttribute("habitacion", habitacion);
     model.addAttribute("fragmento", "tabla");
 
     return "app/cliente";
   }
 
-  @GetMapping("/calendario")
-  public String reservas(Model model) {
-    model.addAttribute("template", "layouts-icon-sidebar");
-    model.addAttribute("title", "Administrar clientes");
-    Sort orden = Sort.by("fechaRegistro").ascending();
-    model.addAttribute("listaClientes", clienteService.findAll(orden));
-    model.addAttribute("listaHabitacionesDisponibles", habitacionService.findAllByEstadoHabitacion(EstadoHabitacion.DISPONIBLE));
+  @PostMapping("/registrar")
+  public String registrar(@RequestParam boolean titular, @RequestParam(value = "id-titular", required = false) Long idTitular,
+                          @ModelAttribute Cliente cliente, RedirectAttributes flash) {
+    Habitacion habitacion = habitacionService.findById(cliente.getHabitacion().getIdHabitacion());
+    habitacion.setEstadoHabitacion(EstadoHabitacion.OCUPADO);
+    cliente.setHabitacion(habitacion);
+    cliente.setEstado(Estado.ACTIVO);
 
-    model.addAttribute("fragmento", "calendario");
-    return "app/cliente-reserva";
-  }
-
-  @Transactional
-  @GetMapping("/api/lista")
-  public ResponseEntity<?> listaClientesRest() {
-    Sort orden = Sort.by("fechaRegistro").ascending();
-    return ResponseEntity.ok().body(clienteService.findAllEagerly());
-  }
-
-  @ResponseBody
-  @PostMapping("/api/registrar")
-  public ResponseEntity<?> registrarClienteRest(@RequestBody Cliente cliente) {
-    try {
-      Habitacion habitacion = habitacionService.findById(cliente.getHabitacion().getIdHabitacion());
-      habitacion.setEstadoHabitacion(cliente.getHabitacion().getEstadoHabitacion());
-
-      Persona persona = personaService.findByDocumentoIdentidad(cliente.getPersona().getDocumentoIdentidad());
-
-      if (persona != null) {
-        persona.setNombre(cliente.getPersona().getNombre());
-        persona.setApellido(cliente.getPersona().getApellido());
-        persona.setDocumentoIdentidad(cliente.getPersona().getDocumentoIdentidad());
-        cliente.setPersona(persona);
-      } else {
-        cliente.getPersona().setEstado(Estado.ACTIVO);
-      }
-
-      cliente.setEstado(Estado.ACTIVO);
-      cliente.setHabitacion(habitacion);
-      Cliente persistido = clienteService.saveWithPersonaAndHabitacion(cliente);
-
-      Cliente retornado = clienteService.findByIdEagerly(persistido.getIdCliente());
-      return ResponseEntity.ok().body(retornado);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.internalServerError().body(e);
+    Cliente persistido = clienteService.saveWithPersonaAndHabitacion(cliente);
+    //Si es titular, relacionarse con si mismo
+    //Caso contrario con su titular
+    if (titular) {
+      persistido.setClienteTitular(persistido);
+    } else {
+      persistido.setClienteTitular(clienteService.findById(idTitular));
     }
+
+    cliente.setFechaRegistro(LocalDateTime.now());
+    clienteService.save(cliente);
+    flash.addFlashAttribute("exito", "Cliente registrado exitosamente");
+    return "redirect:/cliente/habitacion/" + persistido.getHabitacion().getIdHabitacion() + "/actual";
+  }
+
+
+  @GetMapping("/formulario-modificar/{idCliente}")
+  public String formularioModificar(@PathVariable Long idCliente, Model model) {
+    Cliente cliente = clienteService.findByIdEagerly(idCliente);
+
+    model.addAttribute("template", "layout");
+    model.addAttribute("title", "Modificar cliente existente");
+    model.addAttribute("listaEstadosCiviles", EstadoCivil.values());
+    model.addAttribute("listaSexos", Sexo.values());
+    model.addAttribute("cliente", cliente);
+    model.addAttribute("titular", false);
+
+    model.addAttribute("fragmento", "formulario");
+    model.addAttribute("tipoFormulario", "modificar");
+    return "app/cliente";
+  }
+
+  @PostMapping("/modificar")
+  public String registrar(@ModelAttribute Cliente cliente, RedirectAttributes flash) {
+    Habitacion habitacion = habitacionService.findById(cliente.getHabitacion().getIdHabitacion());
+    cliente.setEstado(Estado.ACTIVO);
+    cliente.getPersona().setEstado(Estado.ACTIVO);
+
+    cliente.setHabitacion(habitacion);
+    Cliente persistido = clienteService.saveWithPersonaAndHabitacion(cliente);
+
+    clienteService.save(cliente);
+    flash.addFlashAttribute("exito", "Cliente modificado exitosamente");
+    return "redirect:/cliente/habitacion/" + persistido.getHabitacion().getIdHabitacion() + "/actual";
   }
 
   @ResponseBody
@@ -149,5 +146,13 @@ public class ClienteController {
     } catch (Exception e) {
       return ResponseEntity.internalServerError().body(e);
     }
+  }
+
+  @Transactional
+  @GetMapping("/api/lista")
+  @ResponseBody
+  public ResponseEntity<?> listaClientesRest() {
+    Sort orden = Sort.by("fechaRegistro").ascending();
+    return ResponseEntity.ok().body(clienteService.findAllEagerly());
   }
 }

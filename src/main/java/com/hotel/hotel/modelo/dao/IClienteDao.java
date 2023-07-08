@@ -27,11 +27,12 @@ public interface IClienteDao extends JpaRepository <Cliente, Long> {
   Optional<Cliente> findByIdEagerly(Long idCliente);
 
   @Query("""
-          SELECT c FROM Cliente c
-          INNER JOIN FETCH c.persona p
-          INNER JOIN FETCH c.habitacion h
-          INNER JOIN FETCH c.clientesBeneficiados cb
-          WHERE c.clienteTitular.idCliente = c.idCliente
+          SELECT DISTINCT c FROM Cliente c
+          JOIN FETCH c.persona p
+          JOIN FETCH c.habitacion h
+          JOIN FETCH c.clientesBeneficiados cb
+          WHERE c.clienteTitular.idCliente = c.idCliente 
+          AND c.habitacion.estadoHabitacion = 'OCUPADO'
           ORDER BY c.fechaRegistro""")
   List<Cliente> findAllClientesTitularesOcupandoHabitacion();
 
@@ -45,11 +46,19 @@ public interface IClienteDao extends JpaRepository <Cliente, Long> {
   List<Cliente> findAllByIdHabitacionAndIdClienteTitular(Long idHabitacion, Long idCliente);
 
   @Query("""
-    SELECT c FROM Cliente c
-    INNER JOIN FETCH c.persona p
-    WHERE c.habitacion.idHabitacion = ?1
-    AND c.fechaRegistro <= CURRENT_TIMESTAMP 
-    AND (c.fechaSalida IS NULL OR c.fechaSalida >= CURRENT_TIMESTAMP )
-""")
+          SELECT c FROM Cliente c
+          INNER JOIN FETCH c.persona p
+          WHERE c.habitacion.idHabitacion = ?1
+          AND c.fechaRegistro <= CURRENT_TIMESTAMP
+          AND (c.fechaSalida IS NULL OR c.fechaSalida >= CURRENT_TIMESTAMP )
+          """)
   List<Cliente> findAllOcupandoHabitacionActualmenteByIdHabitacion(Long idHabitacion);
+
+
+  @Query("""
+          SELECT c FROM Cliente c
+          INNER JOIN FETCH c.persona p
+          WHERE c.clienteTitular.idCliente = ?1
+          """)
+  List<Cliente> findAllByIdClienteTitular(Long idCliente);
 }
