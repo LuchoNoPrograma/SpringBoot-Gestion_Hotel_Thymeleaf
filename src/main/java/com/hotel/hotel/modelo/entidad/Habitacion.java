@@ -41,4 +41,7 @@ public class Habitacion extends Auditoria{
 
     @Enumerated(EnumType.STRING)
     private EstadoHabitacion estadoHabitacion;
+
+    @Transient
+    private Integer nClientes;
 }

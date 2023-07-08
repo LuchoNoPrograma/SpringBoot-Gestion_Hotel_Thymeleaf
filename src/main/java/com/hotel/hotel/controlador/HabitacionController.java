@@ -9,12 +9,14 @@ import com.hotel.hotel.modelo.servicio.interfaces.ITipoHabitacionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.List;
 
 @Log4j2
@@ -122,4 +124,15 @@ public class HabitacionController {
     flash.addFlashAttribute("exito", "Habitacion habilitada y disponible correctamente!");
     return "redirect:/habitacion/lista";
   }
+
+
+  @ResponseBody
+  @GetMapping("/mas-usados")
+  public ResponseEntity<?> reporteHabitacionByFechas(){
+    LocalDate fechaExacta = LocalDate.now();
+    List<Habitacion> listaHabitaciones = habitacionService.habitacionesMasConcurridasByFechaExacta(fechaExacta);
+    return ResponseEntity.ok().body(listaHabitaciones);
+  }
+
+
 }

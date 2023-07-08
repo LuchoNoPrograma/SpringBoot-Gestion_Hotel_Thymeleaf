@@ -4,6 +4,7 @@ import com.hotel.hotel.modelo.entidad.Habitacion;
 import com.hotel.hotel.modelo.enums.EstadoHabitacion;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IHabitacionService {
@@ -14,4 +15,5 @@ public interface IHabitacionService {
   List<Habitacion> findAllDistinctEliminado(Sort sort);
 
   List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion);
+  List<Habitacion> habitacionesMasConcurridasByFechaExacta(LocalDate fechaExacta);
 }
