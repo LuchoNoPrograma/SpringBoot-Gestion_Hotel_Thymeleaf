@@ -4,6 +4,8 @@ import com.hotel.hotel.modelo.dao.IPersonaDao;
 import com.hotel.hotel.modelo.entidad.Persona;
 import com.hotel.hotel.modelo.servicio.interfaces.IPersonaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,11 @@ public class PersonaServiceImpl implements IPersonaService {
   @Override
   public List<Persona> findAll(Sort sort) {
     return personaDao.findAll(sort);
+  }
+
+  @Override
+  public Page<Persona> findAllDistinctEliminado(String query, Pageable pageable){
+    return personaDao.findAllDistinctEliminado(query, pageable);
   }
 
   @Override

@@ -3,6 +3,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hotel.hotel.modelo.enums.Cargo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 @NoArgsConstructor
 public class Empleado extends Auditoria{
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "persona_id_persona")
     private Persona persona;

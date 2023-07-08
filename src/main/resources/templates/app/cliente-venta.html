@@ -163,32 +163,20 @@
                          data-bs-placement="top" title="Ver clientes">
                         <i class="fas fa-house-user"></i>
                       </a>
-                      <a th:href="@{/venta/formulario-servicio-habitacion/{id}(id=${h.idHabitacion})}"
+                      <a th:href="@{/servicio}"
                          class="btn btn-success btn-rounded waves-effect waves-light"
                          data-bs-toggle="tooltip"
                          data-bs-placement="top" title="Agregar servicio">
                         <i class="fas fa-cart-plus"></i>
                       </a>
                     </th:block>
-                    <th:block th:case="RESERVADO">
-                      <form th:action="@{/reserva/calendario}" method="GET" class="d-inline">
-                        <input type="hidden" th:value="${h.idHabitacion}" name="id">
-                        <button type="submit"
-                                class="btn btn-success btn-rounded waves-effect waves-light
-                                   btn-anular-reserva" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Confirmar reserva">
-                          <i class="fas fa-user-plus"></i>
-                        </button>
-                      </form>
-                      <form th:action="@{/reserva/anular-reserva}" method="POST" class="d-inline">
-                        <input type="hidden" th:value="${h.idHabitacion}" name="idHabitacion">
-                        <button type="submit"
-                                class="btn btn-danger btn-rounded waves-effect waves-light
-                                   btn-anular-reserva" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Anular reserva">
-                          <i class="fas fa-user-alt-slash"></i>
-                        </button>
-                      </form>
+                    <th:block>
+                      <a th:case="RESERVADO"
+                         th:href="@{/cliente/habitacion/{idHabitacion}/actual(idHabitacion=${h.idHabitacion})}"
+                         class="btn btn-primary">
+                        <span>Registrar clientes</span>
+                        <i class="fas fa-user-clock "></i>
+                      </a>
                     </th:block>
                     <th:block th:case="EN_MANTENIMIENTO">
                       <form th:action="@{/habitacion/habilitar}" method="POST"

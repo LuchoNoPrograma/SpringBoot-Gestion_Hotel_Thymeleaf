@@ -23,8 +23,11 @@
   <!-- Responsive datatable examples -->
   <link th:href="@{/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet"
         type="text/css"/>
-  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css"/>
 
+  <th:block th:if="${fragmento == 'formulario'}">
+    <link th:href="@{/assets/libs/select2/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+  </th:block>
 </th:block>
 <body>
 
@@ -51,15 +54,24 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-                <th:block th:if="${fragmento == 'tabla'}">
-                  <div class="d-flex flex-row-reverse mb-2">
-                    <a th:href="@{/empleado/formulario-registro}" class="btn btn-success">
-                      Registrar
-                      <i class="fas fa-pen-alt"></i>
+                <th:block th:if="${fragmento == 'tabla'}"
+                          th:with="limite=${#lists.size(listaClientes) >= habitacion.capacidadHabitacion}">
+                  <div class="d-flex justify-content-end mb-2 gap-2">
+                    <a th:href="@{/cliente/formulario-registrar}" class="btn btn-primary"
+                       th:classappend="${!limite? 'btn-registrar': 'btn-limite'}"
+                       data-titular="true" th:data-id="${habitacion.idHabitacion}">
+                      Nuevo titular
+                      <i class="fas fa-user-tie"></i>
+                    </a>
+                    <a th:href="@{/cliente/formulario-registrar}" class="btn btn-success btn-registrar"
+                       th:classappend="${!limite? 'btn-registrar': 'btn-limite'}"
+                       data-titular="false" th:data-id="${habitacion.idHabitacion}">
+                      Nuevo beneficiario
+                      <i class="fas fa-user-friends"></i>
                     </a>
                   </div>
                   <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
-                    <thead>
+                    <thead class="table-light">
                     <tr>
                       <th>Nombres</th>
                       <th>Apellidos</th>
@@ -69,23 +81,23 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="e : ${listaEmpleados}" th:with="p = ${e.persona}">
+                    <tr th:each="c : ${listaClientes}" th:with="p = ${c.persona}">
                       <td th:text="${p.nombre}"></td>
                       <td th:text="${p.apellido}"></td>
                       <td th:text="${p.documentoIdentidad}"></td>
                       <td th:text="${p.celular}"></td>
                       <td>
-                        <a th:href="@{/empleado/formulario-modificar/{id}(id=${e.idEmpleado})}"
+                        <a th:href="@{/cliente/formulario-modificar/{id}(id=${c.idCliente})}"
                            class="btn btn-primary btn-rounded waves-effect waves-light" data-bs-toggle="tooltip"
                            data-bs-placement="top" title="Modificar">
                           <i class="fas fa-pencil-alt"></i>
                         </a>
                         <form th:action="@{/empleado/eliminar}" method="POST" class="d-inline">
-                          <input type="hidden" th:value="${e.idEmpleado}" name="idEmpleado">
+                          <input type="hidden" th:value="${c.idCliente}" name="idEmpleado">
                           <button type="submit"
-                             class="btn btn-danger btn-rounded waves-effect waves-light
-                                  btn-eliminar" data-bs-toggle="tooltip"
-                             data-bs-placement="top" title="Eliminar">
+                                  class="btn btn-danger btn-rounded waves-effect waves-light
+                                   btn-eliminar" data-bs-toggle="tooltip"
+                                  data-bs-placement="top" title="Eliminar">
                             <i class="fas fa-trash-alt"></i>
                           </button>
                         </form>
@@ -95,11 +107,18 @@
                   </table>
                 </th:block>
                 <th:block th:if="${fragmento} == 'formulario'">
-                  <form th:action="@{${tipoFormulario == 'registrar'? '/empleado/registrar': '/empleado/modificar'}}"
-                        th:object="${empleado}" method="post">
+                  <form th:action="@{${tipoFormulario == 'registrar'? '/cliente/registrar': '/cliente/modificar'}}"
+                        th:object="${cliente}" method="post">
 
-                    <input type="hidden" th:field="*{idEmpleado}">
+                    <input type="hidden" th:field="*{idCliente}">
+                    <input type="hidden" th:field="*{estado}">
+
+
                     <input type="hidden" th:field="*{persona.idPersona}">
+                    <input type="hidden" th:if="${tipoFormulario == 'modificar'}"
+                      th:field="*{persona.estado}">
+
+                    <input type="hidden" name="titular" th:value="${titular}"/>
 
                     <div class="row mb-4">
                       <h4 class="fw-bold">Datos personales</h4>
@@ -178,38 +197,57 @@
                     </div>
 
                     <div class="row mb-4">
-                      <h4 class="fw-bold">Datos del empleado</h4>
+                      <h4 class="fw-bold">Datos del cliente</h4>
                       <div class="col-lg-4 mb-2">
-                        <label for="cargo" class="form-label">Cargo: </label>
-                        <select type="text" class="form-select" id="cargo"
-                                th:field="*{cargo}">
-                          <option selected hidden value="">--SELECCIONE--</option>
-                          <option th:each="c : ${listaCargos}"
-                                  th:value="${c}" th:text="${c.nombreFormal}"></option>
-                        </select>
+                        <label for="fechaIngreso" class="form-label">Fecha de ingreso: </label>
+                        <input type="datetime-local" class="form-select" id="fechaIngreso" th:field="*{fechaIngreso}">
                       </div>
 
                       <div class="col-lg-4 mb-2">
-                        <label for="sueldo" class="form-label">Sueldo: </label>
-                        <input type="text" class="form-control" id="sueldo"
-                               placeholder="..."
-                               th:field="*{sueldo}">
+                        <label for="fechaSalida" class="form-label">Fecha de salida: </label>
+                        <input type="datetime-local" class="form-control" id="fechaSalida"
+                               placeholder="..." th:field="*{fechaSalida}">
                       </div>
 
-                      <div class="col-lg-3 mb-2">
-                        <label for="fechaContrato" class="form-label">Fecha de contrato: </label>
-                        <input type="datetime-local" class="form-control" id="fechaContrato"
-                               placeholder="..."
-                               th:field="*{fechaContrato}">
+                      <div class="col-md-4">
+                        <div class="mb-3">
+                          <label for="cliente-habitacion" class="form-label">Habitación: </label>
+                          <select class="form-control form-select" name="category"
+                                  id="cliente-habitacion" th:field="*{habitacion.idHabitacion}">
+                            <option th:value="*{habitacion.idHabitacion}"
+                                    th:text="*{habitacion.nroHabitacion}"></option>
+                          </select>
+                          <div class="invalid-feedback">
+                            Seleccione una habitación
+                          </div>
+                        </div>
                       </div>
-
                     </div>
 
+
+                    <!--
+                     NECESARIO PARA PODER MODIFICAR A LA ENTIDAD RECURSIVA
+                    LA RELACION ES EN CASCADA POR LO QUE NO FUNCIONA EN PERSISTIR
+                    -->
+                    <th:block th:if="${tipoFormulario == 'modificar'}">
+                      <input type="hidden" th:field="*{clienteTitular.idCliente}">
+                      <input type="hidden" th:field="*{fechaRegistro}">
+                    </th:block>
+
+                    <div class="row mb-4" th:if="${!titular && tipoFormulario == 'registrar'}">
+                      <h4 class="fw-bold">Buscar titular</h4>
+                      <label for="cliente-titular">Cliente titular</label>
+                      <select class="form-select select2" id="cliente-titular" name="id-titular">
+                        <option th:each="c : ${listaTitulares}"
+                                th:value="${c.idCliente}" th:with="p=${c.persona}"
+                                th:text="${p.nombreCompleto + ' - ' +p.documentoIdentidad}"></option>
+                      </select>
+                    </div>
 
                     <div class="d-flex flex-row-reverse">
                       <button type="submit"
                               class="btn waves-effect btn-label waves-light"
-                              th:classappend="${tipoFormulario == 'registrar' ? 'btn-success' : 'btn-primary'}">
+                              th:classappend="${tipoFormulario == 'registrar' ? 'btn-success btn-registrar-cliente  ' : 'btn-primary btn-modificar-cliente'}">
                         <i class="bx bx-paper-plane label-icon"></i>
                         <span th:text="${tipoFormulario == 'registrar' ? 'Registrar' : 'Modificar'}"></span>
                       </button>
@@ -261,21 +299,92 @@
   <script th:src="@{/assets/js/pages/dashboard.init.js}"></script>
   <script th:src="@{/assets/js/pages/fontawesome.init.js}"></script>
 
-
   <th:block th:if="${fragmento == 'tabla'}">
     <script th:src="@{/app/botones-crud.js}"></script>
-    <script th:inline="javascript">
+  </th:block>
+
+  <th:block th:if="${fragmento == 'formulario'}">
+    <script th:src="@{/app/botones-crud.js}"></script>
+    <script th:src="@{/assets/libs/select2/js/select2.min.js}"></script>
+    <script th:src="@{/assets/libs/select2/js/select2.full.min.js}"></script>
+    <script th:src="@{/assets/libs/select2/js/select2es.min.js}"></script>
+    <script>
       $(document).ready(function () {
-        $("#datatable").DataTable({
-          language: {
-            url: "/assets/libs/datatables.net/js/dataTable-es-ES.json"
-          },
-          lengthMenu: [10, 20, 50, 100]
+        $('.select2').select2({
+          language: 'es',
+          width: '100%'
         });
-      })
+      });
     </script>
   </th:block>
 
+  <script th:inline="javascript">
+    $(document).ready(function () {
+      $("#datatable").DataTable({
+        language: {
+          url: "/assets/libs/datatables.net/js/dataTable-es-ES.json"
+        },
+        lengthMenu: [10, 20, 50, 100]
+      });
+
+      const configFormularioRegistrar = {
+        selector: '.btn-registrar-cliente',
+        tipoEvento: 'click',
+        titulo: 'Registro de nuevo cliente',
+        textoAlerta: 'Estas seguro de registrar al cliente?',
+        textoBoton: 'Si, registrar cliente'
+      }
+
+      const configFormularioModificar = {
+        selector: '.btn-modificar-cliente',
+        tipoEvento: 'click',
+        titulo: 'Modificar cliente',
+        textoAlerta: 'Estas seguro de modificar al cliente?',
+        textoBoton: 'Si, modificar cliente'
+      }
+
+      alertaEnviarFormulario(configFormularioRegistrar);
+      alertaEnviarFormulario(configFormularioModificar);
+
+
+      $('.btn-registrar').on('click', function (e) {
+        const esTitular = $(this).attr('data-titular');
+        e.preventDefault();
+        Swal.fire({
+          title: 'Buscar persona por documento de identidad',
+          input: 'text',
+          inputLabel: 'Ingrese el documento de identidad',
+          inputPlaceholder: 'N° de Documento',
+          showCancelButton: true,
+          confirmButtonText: 'Buscar',
+          cancelButtonText: 'Cancelar',
+          customClass: {
+            confirmButton: 'bg-primary',
+            cancelButton: 'bg-danger'
+          },
+          preConfirm: (documento) => {
+            if (!documento) {
+              Swal.showValidationMessage('Debe ingresar un n° documento de identidad');
+              return false;
+            }
+
+            const url = $(this).attr('href') + '?titular=' + esTitular + '&nro=' + documento + '&id=' + $(this).attr('data-id');
+            window.location.href = url;
+          }
+        });
+      })
+
+      $('.btn-limite').on('click', function (e) {
+        e.preventDefault();
+        Swal.fire({
+          title: 'Límite de usuarios alcanzado',
+          text: 'Se ha alcanzado el límite máximo de usuarios permitidos para esta habitación.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      })
+    })
+  </script>
 </th:block>
 
 </body>

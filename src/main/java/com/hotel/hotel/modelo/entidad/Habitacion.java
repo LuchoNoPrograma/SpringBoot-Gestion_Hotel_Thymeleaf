@@ -1,6 +1,9 @@
 package com.hotel.hotel.modelo.entidad;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hotel.hotel.modelo.enums.EstadoHabitacion;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +12,7 @@ import org.hibernate.annotations.Fetch;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "habitacion")
 @Getter
@@ -23,7 +27,8 @@ public class Habitacion extends Auditoria{
     @JoinColumn(name = "tipo_habitacion_id_tipo_habitacion")
     private TipoHabitacion tipoHabitacion;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "habitacion")
+    @JsonBackReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "habitacion")
     private List<Cliente> clientes;
 
     @Id
