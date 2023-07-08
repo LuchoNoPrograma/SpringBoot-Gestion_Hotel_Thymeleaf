@@ -40,4 +40,9 @@ public class PersonaServiceImpl implements IPersonaService {
   public Persona findByDocumentoIdentidad(String documentoIdentidad){
     return personaDao.findByDocumentoIdentidad(documentoIdentidad);
   }
+
+  @Override
+  public List<Persona> findAllDistinctEliminado(Sort sort) {
+    return personaDao.findAllDistinctEliminado(sort);
+  }
 }

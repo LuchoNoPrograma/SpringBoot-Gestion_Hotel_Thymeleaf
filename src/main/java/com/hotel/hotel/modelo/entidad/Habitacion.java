@@ -35,6 +35,7 @@ public class Habitacion extends Auditoria{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idHabitacion;
     private Integer nroHabitacion;
+    private Float precioHabitacion;
     private Byte capacidadHabitacion;
     private String descripcion;
 
