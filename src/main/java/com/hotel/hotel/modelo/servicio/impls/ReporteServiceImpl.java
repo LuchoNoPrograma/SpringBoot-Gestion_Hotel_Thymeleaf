@@ -24,7 +24,7 @@ public class ReporteServiceImpl implements ReporteService {
   private final ResourceLoader resourceLoader;
   @Override
   public ReporteDto reporteDiarioMoivimiento(Map<String, Object> params) throws IOException {
-    String fileName = "reporte_matriculas_detalle";
+    String fileName = "HOTEL";
     ReporteDto dto = new ReporteDto();
 
     Resource resource = resourceLoader.getResource("classpath:static/assets/images");

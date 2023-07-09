@@ -22,7 +22,7 @@ import java.util.Map;
 public class ReporteController {
   private final ReporteService reporteService;
 
-  @GetMapping("/movimiento-diario}")
+  @GetMapping("/movimiento-diario")
   public ResponseEntity<?> descargarInformeMovimiento(){
     Map<String, Object> params = new HashMap<>();
     params.put("fechaHoy", LocalDate.now().toString());
