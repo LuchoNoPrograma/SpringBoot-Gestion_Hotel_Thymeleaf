@@ -135,7 +135,7 @@ public class HabitacionController {
   }
 
   @RedirigirEstadoHabitacion
-  @PostMapping("/desocupar")
+  @PostMapping("/desocupar-clientes")
   public String desocuparClientes(@RequestParam Long idHabitacion, @RequestParam List<Long> clientes, RedirectAttributes flash){
     List<Cliente> listaClientesHuespedes = clienteService.findAllClientesHuespedesByIdHabitacion(idHabitacion);
     listaClientesHuespedes.forEach(c ->{

@@ -44,6 +44,10 @@ public class Cliente extends Auditoria{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCliente;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime fechaIngreso;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime fechaSalida;
 
