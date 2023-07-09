@@ -69,14 +69,14 @@ public class EmpleadoController {
     empleado.getPersona().setEstado(Estado.ACTIVO);
     empleadoService.saveWithPersona(empleado);
     flash.addFlashAttribute("exito", "Empleado registrado exitosamente");
-    return "redirect:/empleado/inicio";
+    return "redirect:/empleado/lista";
   }
 
   @PostMapping("/modificar")
   public String modificar(@ModelAttribute Empleado empleado, RedirectAttributes flash){
     empleadoService.saveWithPersona(empleado);
     flash.addFlashAttribute("exito", "Empleado modificado exitosamente");
-    return "redirect:/empleado/inicio";
+    return "redirect:/empleado/lista";
   }
 
 
@@ -86,6 +86,6 @@ public class EmpleadoController {
     empleado.setEstado(Estado.ELIMINADO);
     empleadoService.save(empleado);
     flash.addFlashAttribute("exito", "Empleado modificado exitosamente");
-    return "redirect:/empleado/inicio";
+    return "redirect:/empleado/lista";
   }
 }

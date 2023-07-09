@@ -40,6 +40,11 @@ public class HabitacionServiceImpl implements IHabitacionService {
   }
 
   @Override
+  public List<Habitacion> findAllHabitacionesWithClientesHuespedes(Sort sort){
+    return habitacionDao.findAllHabitacionesWithClientesHuespedes(sort);
+  }
+
+  @Override
   public List<Habitacion> habitacionesMasConcurridasByFechaExacta(LocalDate fechaExacta){
     List<Habitacion> listaHabitacion = habitacionDao.habitacionesMasConcurridasByFechaExacta(fechaExacta);
 
@@ -54,6 +59,11 @@ public class HabitacionServiceImpl implements IHabitacionService {
       }
     }
     return habitacionesFiltradas;
+  }
+
+  @Override
+  public List<Habitacion> findAllHabitacionesWithClientesHuespedesAndEstadoHabitacion(EstadoHabitacion estadoHabitacion){
+    return habitacionDao.findAllHabitacionesWithClientesHuespedesAndEstadoHabitacion(estadoHabitacion);
   }
 
 }

@@ -31,12 +31,12 @@ public class HabitacionController {
   public String index(@RequestParam(value = "estado", required = false) EstadoHabitacion estadoHabitacion, Model model, HttpSession session){
     List<Habitacion> listaHabitaciones;
     if(estadoHabitacion != null){
-      listaHabitaciones = habitacionService.findAllDistinctEliminadoAndEstadoHabitacion(estadoHabitacion);
+      listaHabitaciones = habitacionService.findAllHabitacionesWithClientesHuespedesAndEstadoHabitacion(estadoHabitacion);
       session.setAttribute("estado", estadoHabitacion);
       EstadoHabitacion estado = (EstadoHabitacion) session.getAttribute("estado");
       log.info(estado.name());
     }else{
-      listaHabitaciones = habitacionService.findAllDistinctEliminado(Sort.by("estadoHabitacion"));
+listaHabitaciones = habitacionService.findAllHabitacionesWithClientesHuespedes(Sort.by("estadoHabitacion"));
       session.removeAttribute("estado");
     }
 
