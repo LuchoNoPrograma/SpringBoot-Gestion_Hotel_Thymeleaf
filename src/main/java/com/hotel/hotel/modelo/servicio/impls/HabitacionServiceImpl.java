@@ -8,7 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,4 +38,22 @@ public class HabitacionServiceImpl implements IHabitacionService {
   public List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion) {
     return habitacionDao.findAllDistinctEliminadoByEstadoHabitacion(estadoHabitacion);
   }
+
+  @Override
+  public List<Habitacion> habitacionesMasConcurridasByFechaExacta(LocalDate fechaExacta){
+    List<Habitacion> listaHabitacion = habitacionDao.habitacionesMasConcurridasByFechaExacta(fechaExacta);
+
+    Set<Long> idHabitaciones = new HashSet<>();
+    List<Habitacion> habitacionesFiltradas = new ArrayList<>();
+
+    for (Habitacion habitacion : listaHabitacion) {
+      Long idHabitacion = habitacion.getIdHabitacion();
+      if (!idHabitaciones.contains(idHabitacion)) {
+        habitacionesFiltradas.add(habitacion);
+        idHabitaciones.add(idHabitacion);
+      }
+    }
+    return habitacionesFiltradas;
+  }
+
 }

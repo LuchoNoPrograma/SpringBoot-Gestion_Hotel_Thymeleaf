@@ -21,7 +21,7 @@ public class Documento extends Auditoria{
     private List<ClienteDocumento> clientesDocumentos;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "tipo_documento_id_factura")
+    @JoinColumn(name = "tipo_documento_id_tipo_documento")
     private TipoDocumento tipoDocumento;
 
     @Id

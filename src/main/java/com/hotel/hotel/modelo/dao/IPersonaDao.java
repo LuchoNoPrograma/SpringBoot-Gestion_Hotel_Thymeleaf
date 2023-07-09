@@ -24,6 +24,9 @@ public interface IPersonaDao extends JpaRepository<Persona, Long> {
   Page<Persona> findAllDistinctEliminado(String query, Pageable pageable);
 
 
-  @Query
+  @Query("""
+          SELECT p FROM Persona p
+          WHERE p.estado != 'ELIMINADO'
+          """)
   List<Persona> findAllDistinctEliminado(Sort sort);
 }

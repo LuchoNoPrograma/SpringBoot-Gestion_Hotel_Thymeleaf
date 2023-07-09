@@ -35,10 +35,13 @@ public class Habitacion extends Auditoria{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idHabitacion;
     private Integer nroHabitacion;
-    private Byte capacidadHabitacion;
     private Float precioHabitacion;
+    private Byte capacidadHabitacion;
     private String descripcion;
 
     @Enumerated(EnumType.STRING)
     private EstadoHabitacion estadoHabitacion;
+
+    @Transient
+    private Integer nClientes;
 }

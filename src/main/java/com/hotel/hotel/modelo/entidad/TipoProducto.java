@@ -17,6 +17,6 @@ import lombok.Setter;
 public class TipoProducto extends Auditoria{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProducto;
+    private Long idTipoProducto;
     private String tipoProducto;
 }
