@@ -120,6 +120,8 @@ public class ClienteController {
     return "app/cliente";
   }
 
+
+
   @PostMapping("/modificar")
   public String registrar(@ModelAttribute Cliente cliente, RedirectAttributes flash) {
     Habitacion habitacion = habitacionService.findById(cliente.getHabitacion().getIdHabitacion());

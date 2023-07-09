@@ -1,8 +1,10 @@
 package com.hotel.hotel.controlador;
 
 import com.hotel.hotel.commons.annotation.RedirigirEstadoHabitacion;
+import com.hotel.hotel.modelo.entidad.Cliente;
 import com.hotel.hotel.modelo.entidad.Habitacion;
 import com.hotel.hotel.modelo.enums.Estado;
+import com.hotel.hotel.modelo.enums.EstadoCliente;
 import com.hotel.hotel.modelo.enums.EstadoHabitacion;
 import com.hotel.hotel.modelo.servicio.interfaces.IClienteService;
 import com.hotel.hotel.modelo.servicio.interfaces.IHabitacionService;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Log4j2
@@ -128,6 +131,22 @@ public class HabitacionController {
     habitacionService.save(habitacion);
 
     flash.addFlashAttribute("exito", "Habitacion habilitada y disponible correctamente!");
+    return "redirect:/habitacion/lista";
+  }
+
+  @RedirigirEstadoHabitacion
+  @PostMapping("/desocupar")
+  public String desocuparClientes(@RequestParam Long idHabitacion, @RequestParam List<Long> clientes, RedirectAttributes flash){
+    List<Cliente> listaClientesHuespedes = clienteService.findAllClientesHuespedesByIdHabitacion(idHabitacion);
+    listaClientesHuespedes.forEach(c ->{
+      c.setEstadoCliente(EstadoCliente.DESOCUPADO);
+      c.setFechaSalida(LocalDateTime.now());
+      clienteService.save(c);
+    });
+    Habitacion habitacion = habitacionService.findById(idHabitacion);
+    habitacion.setEstadoHabitacion(EstadoHabitacion.DISPONIBLE);
+    habitacionService.save(habitacion);
+    flash.addFlashAttribute("exito", "Clientes desocupados exitosamente, la habitación esta disponible");
     return "redirect:/habitacion/lista";
   }
 
