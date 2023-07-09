@@ -128,11 +128,9 @@ public class HabitacionController {
 
   @ResponseBody
   @GetMapping("/mas-usados")
-  public ResponseEntity<?> reporteHabitacionByFechas(){
-    LocalDate fechaExacta = LocalDate.now();
+  public ResponseEntity<?> reporteHabitacionByFechas(@RequestParam int dia, @RequestParam int mes, @RequestParam int ano){
+    LocalDate fechaExacta = LocalDate.of(ano, mes, dia);
     List<Habitacion> listaHabitaciones = habitacionService.habitacionesMasConcurridasByFechaExacta(fechaExacta);
     return ResponseEntity.ok().body(listaHabitaciones);
   }
-
-
 }

@@ -3,10 +3,7 @@ package com.hotel.hotel.controlador;
 import com.hotel.hotel.modelo.entidad.Cliente;
 import com.hotel.hotel.modelo.entidad.Habitacion;
 import com.hotel.hotel.modelo.entidad.Persona;
-import com.hotel.hotel.modelo.enums.Estado;
-import com.hotel.hotel.modelo.enums.EstadoCivil;
-import com.hotel.hotel.modelo.enums.EstadoHabitacion;
-import com.hotel.hotel.modelo.enums.Sexo;
+import com.hotel.hotel.modelo.enums.*;
 import com.hotel.hotel.modelo.servicio.interfaces.IClienteService;
 import com.hotel.hotel.modelo.servicio.interfaces.IHabitacionService;
 import com.hotel.hotel.modelo.servicio.interfaces.IPersonaService;
@@ -88,6 +85,7 @@ public class ClienteController {
     Habitacion habitacion = habitacionService.findById(cliente.getHabitacion().getIdHabitacion());
     habitacion.setEstadoHabitacion(EstadoHabitacion.OCUPADO);
     cliente.setHabitacion(habitacion);
+    cliente.setEstadoCliente(EstadoCliente.HUESPED);
     cliente.setEstado(Estado.ACTIVO);
 
     Cliente persistido = clienteService.saveWithPersonaAndHabitacion(cliente);

@@ -44,4 +44,11 @@ public interface IHabitacionDao extends JpaRepository<Habitacion, Long> {
           ORDER BY nClientes DESC
              """, nativeQuery = true)
  List<Habitacion> habitacionesMasConcurridasByFechaInicioAndFechaFin(LocalDate fechaInicio, LocalDate fechaFin);
+
+  @Query("""
+SELECT h FROM Habitacion h
+INNER JOIN FETCH 
+WHERE h.estado != 'ELIMINADO'
+""")
+  List<Habitacion> findHabitacionesWithClientesHuespedes();
 }
