@@ -67,4 +67,9 @@ public class ClienteServiceImpl implements IClienteService {
   public List<Cliente> findAllOcupandoHabitacionActualmenteByIdHabitacion(Long idHabitacion){
     return clienteDao.findAllOcupandoHabitacionActualmenteByIdHabitacion(idHabitacion);
   }
+
+  @Override
+  public List<Cliente> findAllClientesHuespedesByIdHabitacion(Long idHabitacion){
+    return clienteDao.findAllClientesHuespedesByIdHabitacion(idHabitacion);
+  }
 }

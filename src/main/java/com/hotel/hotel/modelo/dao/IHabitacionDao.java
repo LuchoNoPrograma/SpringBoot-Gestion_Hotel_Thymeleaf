@@ -47,7 +47,7 @@ public interface IHabitacionDao extends JpaRepository<Habitacion, Long> {
 
   @Query("""
           SELECT h FROM Habitacion h
-          INNER JOIN FETCH h.clientes c
+          LEFT JOIN FETCH h.clientes c
           WHERE h.estado != 'ELIMINADO' AND c.estadoCliente != 'DESOCUPADO'
           """)
   List<Habitacion> findAllHabitacionesWithClientesHuespedes(Sort sort);

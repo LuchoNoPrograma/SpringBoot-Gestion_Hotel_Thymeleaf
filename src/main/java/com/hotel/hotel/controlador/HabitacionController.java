@@ -4,6 +4,7 @@ import com.hotel.hotel.commons.annotation.RedirigirEstadoHabitacion;
 import com.hotel.hotel.modelo.entidad.Habitacion;
 import com.hotel.hotel.modelo.enums.Estado;
 import com.hotel.hotel.modelo.enums.EstadoHabitacion;
+import com.hotel.hotel.modelo.servicio.interfaces.IClienteService;
 import com.hotel.hotel.modelo.servicio.interfaces.IHabitacionService;
 import com.hotel.hotel.modelo.servicio.interfaces.ITipoHabitacionService;
 import lombok.RequiredArgsConstructor;
@@ -26,19 +27,24 @@ import java.util.List;
 public class HabitacionController {
   private final IHabitacionService habitacionService;
   private final ITipoHabitacionService tipoHabitacionService;
+  private final IClienteService clienteService;
 
   @GetMapping("/lista")
   public String index(@RequestParam(value = "estado", required = false) EstadoHabitacion estadoHabitacion, Model model, HttpSession session){
     List<Habitacion> listaHabitaciones;
     if(estadoHabitacion != null){
-      listaHabitaciones = habitacionService.findAllHabitacionesWithClientesHuespedesAndEstadoHabitacion(estadoHabitacion);
+      listaHabitaciones = habitacionService.findAllDistinctEliminadoAndEstadoHabitacion(estadoHabitacion);
       session.setAttribute("estado", estadoHabitacion);
       EstadoHabitacion estado = (EstadoHabitacion) session.getAttribute("estado");
       log.info(estado.name());
     }else{
-listaHabitaciones = habitacionService.findAllHabitacionesWithClientesHuespedes(Sort.by("estadoHabitacion"));
+      listaHabitaciones = habitacionService.findAllDistinctEliminado(Sort.by("estadoHabitacion"));
       session.removeAttribute("estado");
     }
+
+    listaHabitaciones.forEach(h -> {
+      h.setClientes(clienteService.findAllClientesHuespedesByIdHabitacion(h.getIdHabitacion()));
+    });
 
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Lista de habitaciones");

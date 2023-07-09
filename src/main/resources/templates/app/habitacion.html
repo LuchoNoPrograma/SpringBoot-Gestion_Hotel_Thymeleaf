@@ -169,15 +169,16 @@
                          data-bs-placement="top" title="Agregar servicio">
                         <i class="fas fa-cart-plus"></i>
                       </a>
-                      <form th:action="@{/habitacion/desocupar-clientes}" method="POST"
-                            class="d-inline">
-                        <input type="hidden" name="idHabitacion" th:value="${h.idHabitacion}">
-                        <button class="btn btn-rounded btn-warning waves-effect waves-light btn-poner-en-mantenimiento"
+                      <form th:action="@{/habitacion/desocupar-clientes}" method="POST" class="d-inline">
+                        <input type="hidden" th:each="cliente : ${h.clientes}" th:name="clientes" th:value="${cliente.idCliente}">
+                        <input type="hidden" th:name="idHabitacion" th:value="${h.idHabitacion}">
+                        <button class="btn btn-rounded btn-warning waves-effect waves-light"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top" title="Desocupar clientes">
                           <i class="fas fa-door-open"></i>
                         </button>
                       </form>
+
                     </th:block>
                     <th:block th:case="RESERVADO">
                       <form th:action="@{/reserva/calendario}" method="GET" class="d-inline">

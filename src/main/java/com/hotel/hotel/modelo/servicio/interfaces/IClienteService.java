@@ -24,4 +24,6 @@ public interface IClienteService {
   List<Cliente> findAllByIdHabitacionAndIdClienteTitular(Long idHabitacion, Long idCliente);
 
   List<Cliente> findAllOcupandoHabitacionActualmenteByIdHabitacion(Long idHabitacion);
+
+  List<Cliente> findAllClientesHuespedesByIdHabitacion(Long idHabitacion);
 }

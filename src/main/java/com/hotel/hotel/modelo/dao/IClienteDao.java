@@ -1,5 +1,6 @@
 package com.hotel.hotel.modelo.dao;
 
+import com.hotel.hotel.modelo.enums.EstadoCliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.hotel.hotel.modelo.entidad.Cliente;
@@ -61,4 +62,13 @@ public interface IClienteDao extends JpaRepository <Cliente, Long> {
           WHERE c.clienteTitular.idCliente = ?1
           """)
   List<Cliente> findAllByIdClienteTitular(Long idCliente);
+
+
+
+ @Query("""
+SELECT c FROM Cliente c
+INNER JOIN FETCH c.persona p
+WHERE c.habitacion.idHabitacion = ?1 AND c.estadoCliente != 'DESOCUPADO'
+""")
+  List<Cliente> findAllClientesHuespedesByIdHabitacion(Long idHabitacion);
 }
