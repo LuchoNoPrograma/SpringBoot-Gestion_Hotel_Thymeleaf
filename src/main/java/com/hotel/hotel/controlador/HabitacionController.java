@@ -98,8 +98,10 @@ public class HabitacionController {
   public String modificar(@ModelAttribute Habitacion habitacion, RedirectAttributes flash){
     habitacionService.save(habitacion);
     flash.addFlashAttribute("exito", "Habitación modificada exitosamente");
-    return "redirect:/habitacion/inicio";
+    return "redirect:/habitacion/lista";
   }
+
+  
 
 
   @RedirigirEstadoHabitacion
