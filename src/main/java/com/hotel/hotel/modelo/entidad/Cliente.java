@@ -18,7 +18,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idCliente")
 public class Cliente extends Auditoria{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "persona_id_persona")
@@ -37,6 +36,7 @@ public class Cliente extends Auditoria{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
     private List<ClienteDocumento> clienteDocumentos;
 
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "habitacion_id_habitacion")
     private Habitacion habitacion;

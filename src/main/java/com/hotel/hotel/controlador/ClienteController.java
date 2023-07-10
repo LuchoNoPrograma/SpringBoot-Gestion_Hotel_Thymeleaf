@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping("/cliente")
@@ -154,5 +155,11 @@ public class ClienteController {
   public ResponseEntity<?> listaClientesRest() {
     Sort orden = Sort.by("fechaRegistro").ascending();
     return ResponseEntity.ok().body(clienteService.findAllEagerly());
+  }
+
+  @GetMapping("/api/lista-huespedes/{idHabitacion}")
+  public ResponseEntity<?> listaClientesHuespedesByIdHabitacion(@PathVariable Long idHabitacion){
+    List<Cliente> listaClientes = clienteService.findAllClientesHuespedesByIdHabitacion(idHabitacion);
+    return ResponseEntity.ok().body(listaClientes);
   }
 }

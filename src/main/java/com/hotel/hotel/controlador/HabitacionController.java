@@ -41,13 +41,14 @@ public class HabitacionController {
       EstadoHabitacion estado = (EstadoHabitacion) session.getAttribute("estado");
       log.info(estado.name());
     }else{
-      listaHabitaciones = habitacionService.findAllDistinctEliminado(Sort.by("estadoHabitacion"));
+      listaHabitaciones = habitacionService.
+              findAllDistinctEliminado(Sort.by("estadoHabitacion").and(Sort.by("nroHabitacion")));
       session.removeAttribute("estado");
     }
 
-    listaHabitaciones.forEach(h -> {
+    /*listaHabitaciones.forEach(h -> {
       h.setClientes(clienteService.findAllClientesHuespedesByIdHabitacion(h.getIdHabitacion()));
-    });
+    });*/
 
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Lista de habitaciones");
