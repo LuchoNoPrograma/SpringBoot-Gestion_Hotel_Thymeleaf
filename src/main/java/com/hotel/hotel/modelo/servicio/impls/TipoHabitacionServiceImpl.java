@@ -4,6 +4,7 @@ import com.hotel.hotel.modelo.dao.ITipoHabitacionDao;
 import com.hotel.hotel.modelo.entidad.TipoHabitacion;
 import com.hotel.hotel.modelo.servicio.interfaces.ITipoHabitacionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,5 +26,10 @@ public class TipoHabitacionServiceImpl implements ITipoHabitacionService {
   @Override
   public List<TipoHabitacion> findAll() {
     return tipoHabitacionDao.findAll();
+  }
+
+  @Override
+  public List<TipoHabitacion> findAllDistinctEliminado(Sort sort) {
+    return tipoHabitacionDao.findAllDistinctEliminado(sort);
   }
 }

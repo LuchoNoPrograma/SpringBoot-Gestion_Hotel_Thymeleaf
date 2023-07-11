@@ -33,4 +33,14 @@ public class ProductoServiceImpl implements IProductoService {
   public List<Producto> findAllLikeNombreProducto(String nombreProducto) {
     return productoDao.findAllLikeNombreProducto(nombreProducto);
   }
+
+  @Override
+  public List<Producto> findAllByTipoProducto(Long idTipoProducto, Sort sort) {
+    return productoDao.findAllByTipoProducto(idTipoProducto, sort);
+  }
+
+  @Override
+  public List<Producto> findAllDistinctEliminado(Sort sort) {
+    return productoDao.findAllDistinctEliminado(sort);
+  }
 }

@@ -313,6 +313,13 @@ File: Main Js File
         });
     }
 
+    function initCustom(){
+        $('.form-control:not(.not-uppercase)').on('input', function(){
+            let inputValue = $(this).val();
+            $(this).val(inputValue.toUpperCase());
+        })
+    }
+
     function init() {
         initMetisMenu();
         initLeftMenuCollapse();
@@ -328,6 +335,7 @@ File: Main Js File
         initPreloader();
         Waves.init();
         initCheckAll();
+        initCustom();
     }
 
     init();

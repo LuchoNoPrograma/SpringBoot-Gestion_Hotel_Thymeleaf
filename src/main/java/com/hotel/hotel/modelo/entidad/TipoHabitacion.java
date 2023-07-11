@@ -15,5 +15,5 @@ public class TipoHabitacion extends Auditoria{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idTipoHabitacion;
-  private String tipoHabitacion;
+  private String nombreTipoHabitacion;
 }

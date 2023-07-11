@@ -11,18 +11,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Producto extends Auditoria{
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id_hotel")
     private Hotel hotel;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_producto_id_tipo_producto")
     private TipoProducto tipoProducto;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProducto;
-    private Double costo;
+    private Double precio;
     private String nombreProducto;
 }

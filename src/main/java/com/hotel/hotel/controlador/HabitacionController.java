@@ -35,14 +35,15 @@ public class HabitacionController {
   @GetMapping("/lista")
   public String index(@RequestParam(value = "estado", required = false) EstadoHabitacion estadoHabitacion, Model model, HttpSession session){
     List<Habitacion> listaHabitaciones;
+    Sort sort = Sort.by("estadoHabitacion", "tipoHabitacion.nombreTipoHabitacion", "nroHabitacion");
     if(estadoHabitacion != null){
-      listaHabitaciones = habitacionService.findAllDistinctEliminadoAndEstadoHabitacion(estadoHabitacion);
+      listaHabitaciones = habitacionService.findAllDistinctEliminadoAndEstadoHabitacion(estadoHabitacion, sort);
       session.setAttribute("estado", estadoHabitacion);
       EstadoHabitacion estado = (EstadoHabitacion) session.getAttribute("estado");
       log.info(estado.name());
     }else{
       listaHabitaciones = habitacionService.
-              findAllDistinctEliminado(Sort.by("estadoHabitacion").and(Sort.by("nroHabitacion")));
+              findAllDistinctEliminado(sort);
       session.removeAttribute("estado");
     }
 
@@ -62,7 +63,7 @@ public class HabitacionController {
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Lista de empleados");
 
-    model.addAttribute("listaTiposHabitaciones", tipoHabitacionService.findAll());
+    model.addAttribute("listaTiposHabitaciones", tipoHabitacionService.findAllDistinctEliminado(Sort.by("nombreTipoHabitacion")));
     model.addAttribute("habitacion", new Habitacion());
     model.addAttribute("fragmento", "formulario");
     model.addAttribute("tipoFormulario", "registrar");
@@ -87,7 +88,7 @@ public class HabitacionController {
     model.addAttribute("template", "layout");
     model.addAttribute("title", "Modificar habitación existente");
 
-    model.addAttribute("listaTiposHabitaciones", tipoHabitacionService.findAll());
+    model.addAttribute("listaTiposHabitaciones", tipoHabitacionService.findAllDistinctEliminado(Sort.by("nombreTipoHabitacion")));
     model.addAttribute("habitacion", habitacion);
     model.addAttribute("fragmento", "formulario");
     model.addAttribute("tipoFormulario", "modificar");
@@ -99,7 +100,7 @@ public class HabitacionController {
   public String modificar(@ModelAttribute Habitacion habitacion, RedirectAttributes flash){
     habitacionService.save(habitacion);
     flash.addFlashAttribute("exito", "Habitación modificada exitosamente");
-    return "redirect:/habitacion/inicio";
+    return "redirect:/habitacion/lista";
   }
 
 

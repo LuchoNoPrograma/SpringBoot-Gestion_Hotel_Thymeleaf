@@ -7,23 +7,22 @@
   <title>Sistema de Gestión Hotelera</title>
 </head>
 <th:block layout:fragment="pagecss">
-  <!-- DataTables -->
-  <link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.boot  strap4.min.css}" rel="stylesheet"
-        type="text/css"/>
-  <link th:href="@{/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css}" rel="stylesheet"
-        type="text/css"/>
+  <th:block th:if="${fragmento == 'tabla'}">
+    <!-- DataTables -->
+    <link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css}" rel="stylesheet"
+          type="text/css"/>
+    <link th:href="@{/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css}" rel="stylesheet"
+          type="text/css"/>
 
-  <!--  Font awesome-->
-  <!--  <link rel="stylesheet" th:href="@{/assets/libs/font-awesome/css/all.min.css}"-->
-  <!--        type="text/css">-->
+    <!-- Responsive datatable examples -->
+    <link th:href="@{/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet"
+          type="text/css"/>
+  </th:block>
 
+  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" th:href="@{/assets/css/icons.min.css}"
         type="text/css">
 
-  <!-- Responsive datatable examples -->
-  <link th:href="@{/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet"
-        type="text/css"/>
-  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
 
 </th:block>
 <body>
@@ -96,10 +95,12 @@
                 </th:block>
                 <th:block th:if="${fragmento} == 'formulario'">
                   <form th:action="@{${tipoFormulario == 'registrar'? '/empleado/registrar': '/empleado/modificar'}}"
-                        th:object="${empleado}" method="post">
+                        th:object="${empleado}" method="post" id="formulario">
 
                     <input type="hidden" th:field="*{idEmpleado}">
                     <input type="hidden" th:field="*{persona.idPersona}">
+                    <input type="hidden" th:field="*{estado}">
+                    <input type="hidden" th:field="*{fechaRegistro}">
 
                     <div class="row mb-4">
                       <h4 class="fw-bold">Datos personales</h4>
@@ -209,7 +210,7 @@
                     <div class="d-flex flex-row-reverse">
                       <button type="submit"
                               class="btn waves-effect btn-label waves-light"
-                              th:classappend="${tipoFormulario == 'registrar' ? 'btn-success' : 'btn-primary'}">
+                              th:classappend="${tipoFormulario == 'registrar' ? 'btn-success btn-registrar' : 'btn-primary btn-modificar'}">
                         <i class="bx bx-paper-plane label-icon"></i>
                         <span th:text="${tipoFormulario == 'registrar' ? 'Registrar' : 'Modificar'}"></span>
                       </button>
@@ -235,36 +236,30 @@
 <!-- END layout-wrapper -->
 
 <th:block layout:fragment="script">
-  <script th:src="@{/assets/libs/apexcharts/apexcharts.min.js}"></script>
-
-  <!-- Required datatable js -->
-  <script th:src="@{/assets/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
-  <script th:src="@{/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
-  <!-- Buttons examples -->
-  <script th:src="@{/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js}"></script>
-  <script th:src="@{/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js}"></script>
-  <script th:src="@{/assets/libs/jszip/jszip.min.js}"></script>
-  <script th:src="@{/assets/libs/pdfmake/build/pdfmake.min.js}"></script>
-  <script th:src="@{/assets/libs/pdfmake/build/vfs_fonts.js}"></script>
-  <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.html5.min.js}"></script>
-  <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.print.min.js}"></script>
-  <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js}"></script>
-
-  <!-- Responsive examples -->
-  <script th:src="@{/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js}"></script>
-  <script th:src="@{/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js}"></script>
-
   <!-- Font awesome -->
   <!--  <script th:src="@{/assets/libs/font-awesome/js/all.min.js}"></script>-->
   <!-- dashboard init -->
   <script th:src="@{/assets/libs/sweetalert2/sweetalert2.min.js}"></script>
-  <script th:src="@{/assets/js/pages/dashboard.init.js}"></script>
-  <script th:src="@{/assets/js/pages/fontawesome.init.js}"></script>
-
+  <script th:src="@{/app/botones-crud.js}"></script>
 
   <th:block th:if="${fragmento == 'tabla'}">
-    <script th:src="@{/app/botones-crud.js}"></script>
-    <script th:inline="javascript">
+    <!-- Required datatable js -->
+    <script th:src="@{/assets/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+    <!-- Buttons examples -->
+    <script th:src="@{/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js}"></script>
+    <script th:src="@{/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js}"></script>
+    <script th:src="@{/assets/libs/jszip/jszip.min.js}"></script>
+    <script th:src="@{/assets/libs/pdfmake/build/pdfmake.min.js}"></script>
+    <script th:src="@{/assets/libs/pdfmake/build/vfs_fonts.js}"></script>
+    <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.html5.min.js}"></script>
+    <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.print.min.js}"></script>
+    <script th:src="@{/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js}"></script>
+
+    <!-- Responsive examples -->
+    <script th:src="@{/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js}"></script>
+    <script th:src="@{/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js}"></script>
+    <script>
       $(document).ready(function () {
         $("#datatable").DataTable({
           language: {
@@ -272,6 +267,33 @@
           },
           lengthMenu: [10, 20, 50, 100]
         });
+      })
+    </script>
+  </th:block>
+
+
+
+  <th:block th:if="${fragmento == 'formulario'}">
+    <script>
+      $(document).ready(function () {
+        const configFormularioRegistrar = {
+          selector: '#formulario .btn-registrar',
+          tipoEvento: 'click',
+          titulo: 'Registro de empleado',
+          textoAlerta: 'Estas seguro de registrar un nuevo empleado?',
+          textoBoton: 'Si, registrar empleado'
+        }
+
+        const configFormularioModificar = {
+          selector: '#formulario .btn-modificar',
+          tipoEvento: 'click',
+          titulo: 'Modificación de empleado',
+          textoAlerta: 'Estas seguro de modificar la información del empleado?',
+          textoBoton: 'Si, modificar empleado'
+        }
+
+        alertaEnviarFormulario(configFormularioRegistrar);
+        alertaEnviarFormulario(configFormularioModificar);
       })
     </script>
   </th:block>

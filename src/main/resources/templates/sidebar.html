@@ -1,64 +1,76 @@
 <html>
 
 <body>
-	<div th:fragment="sidebar" th:remove="tag">
-		<div class="vertical-menu">
-			<div data-simplebar class="h-100">
+<div th:fragment="sidebar" th:remove="tag">
+  <div class="vertical-menu">
+    <div data-simplebar class="h-100">
 
-				<!--- Sidemenu -->
-				<div id="sidebar-menu">
-					<!-- Left Menu Start -->
-					<ul class="metismenu list-unstyled" id="side-menu">
-						<li class="menu-title" key="t-menu">Menu</li>
+      <!--- Sidemenu -->
+      <div id="sidebar-menu">
+        <!-- Left Menu Start -->
+        <ul class="metismenu list-unstyled" id="side-menu">
+          <li class="menu-title" key="t-menu">Menu</li>
 
-						<li>
-							<a href="javascript: void(0);" class="has-arrow waves-effect">
-								<i class="bx bxs-user-detail"></i>
-								<span key="t-dashboards">Empleados</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a th:href="@{/empleado/lista}" key="t-default">Lista</a></li>
-								<li><a th:href="@{/empleado/formulario-registro}" key="t-saas">Registrar</a></li>
-							</ul>
-						</li>
-						<li>
-							<a href="javascript: void(0);" class="has-arrow waves-effect">
-								<i class="bx bx-home-circle"></i>
-								<span key="t-dashboards">Habitaciones</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a th:href="@{/habitacion/lista}" key="t-default">Lista</a></li>
-								<li><a th:href="@{/habitacion/formulario-registrar}" key="t-saas">Registrar</a></li>
-							</ul>
-						</li>
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bxs-user-detail"></i>
+              <span key="t-dashboards">Empleados</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+              <li><a th:href="@{/empleado/lista}" key="t-default">Lista</a></li>
+              <li><a th:href="@{/empleado/formulario-registro}" key="t-saas">Registrar</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bx-home-circle"></i>
+              <span key="t-dashboards">Habitaciones</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+              <li><a th:href="@{/habitacion/lista}" key="t-default">Lista</a></li>
+              <li><a th:href="@{/habitacion/formulario-registrar}" key="t-saas">Registrar</a></li>
+            </ul>
+          </li>
 
-            <li>
-              <a href="javascript: void(0);" class="has-arrow waves-effect">
-                <i class="bx bx-calendar"></i>
-                <span key="t-dashboards">Calendario</span>
-              </a>
-              <ul class="sub-menu" aria-expanded="false">
-                <li><a th:href="@{/reserva/calendario}" key="t-tui-calendar">Reservas</a></li>
-              </ul>
-            </li>
-						<li>
-							<a href="javascript: void(0);" class="has-arrow waves-effect">
-								<i class="fas fa-file-pdf"></i>
-								<span key="t-dashboards">Informe</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a th:href="@{/informe/movimiento-diario}" key="t-default">Lista informe</a></li>
-							</li>
-								</ul>
-						</ul>
-						</li>
-				</div>
-			</div>
-			<!-- Sidebar -->
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bx-calendar"></i>
+              <span key="t-dashboards">Calendario</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+              <li><a th:href="@{/reserva/calendario}" key="t-tui-calendar">Reservas</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bx-cart-alt"></i>
+              <span key="t-dashboards">Producto</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+              <li><a th:href="@{/producto/lista}" key="t-tui-calendar">Lista</a></li>
+              <li><a th:href="@{/tipo-producto/lista}" key="t-tui-calendar">Tipos de producto</a></li>
+            </ul>
+          </li>
+          <li>
+
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="fas fa-file-pdf"></i>
+              <span key="t-dashboards">Informe</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+              <li><a th:href="@{/informe/movimiento-diario}" key="t-default">Lista informe</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Sidebar -->
 
 
-		</div>
-	</div>
+  </div>
+</div>
 </body>
 
 </html>
