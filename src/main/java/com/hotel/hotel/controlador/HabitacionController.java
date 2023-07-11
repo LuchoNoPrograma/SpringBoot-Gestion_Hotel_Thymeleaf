@@ -103,6 +103,8 @@ public class HabitacionController {
     return "redirect:/habitacion/lista";
   }
 
+  
+
 
   @RedirigirEstadoHabitacion
   @PostMapping("/eliminar")
