@@ -35,8 +35,8 @@ public class HabitacionServiceImpl implements IHabitacionService {
   }
 
   @Override
-  public List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion) {
-    return habitacionDao.findAllDistinctEliminadoByEstadoHabitacion(estadoHabitacion);
+  public List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion, Sort sort) {
+    return habitacionDao.findAllDistinctEliminadoByEstadoHabitacion(estadoHabitacion, sort);
   }
 
   @Override

@@ -44,7 +44,8 @@ public class ClienteReservaController {
 
     model.addAttribute("listaPersonas", personaService.findAllDistinctEliminado(Sort.by("nombre"))  );
     model.addAttribute("listaClientes", clienteService.findAll(orden));
-    model.addAttribute("listaHabitacionesDisponibles", habitacionService.findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion.DISPONIBLE));
+
+//    model.addAttribute("listaHabitacionesDisponibles", habitacionService.findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion.DISPONIBLE));
 
     model.addAttribute("fragmento", "calendario");
     return "app/cliente-reserva";

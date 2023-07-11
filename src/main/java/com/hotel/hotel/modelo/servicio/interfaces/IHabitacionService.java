@@ -14,7 +14,7 @@ public interface IHabitacionService {
 
   List<Habitacion> findAllDistinctEliminado(Sort sort);
 
-  List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion);
+  List<Habitacion> findAllDistinctEliminadoAndEstadoHabitacion(EstadoHabitacion estadoHabitacion, Sort sort);
 
   List<Habitacion> findAllHabitacionesWithClientesHuespedes(Sort sort);
 

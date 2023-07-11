@@ -9,7 +9,7 @@
 <th:block layout:fragment="pagecss">
   <th:block th:if="${fragmento == 'tabla'}">
     <!-- DataTables -->
-    <link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.boot  strap4.min.css}" rel="stylesheet"
+    <link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css}" rel="stylesheet"
           type="text/css"/>
     <link th:href="@{/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css}" rel="stylesheet"
           type="text/css"/>
@@ -38,18 +38,6 @@
         <div th:replace="page-title :: topnavbar(${title},${item},${subitem})"></div>
         <!-- end page title -->
 
-        <div th:if="${fragmento == 'tabla'}" class="d-flex justify-content-end my-2">
-          <form th:action="@{/producto/lista}">
-          <label for="ordenTipoProducto" class="col-form-label">Ordenar por: </label>
-          <select id="ordenTipoProducto" name="tipo" class="form-select">
-            <option th:each="t : ${listaTiposProductos}"
-                    th:selected="${#strings.toString(t.idTipoProducto) == #request.getParameter('tipo')}"
-                    th:value="${t.idTipoProducto}"
-                    th:text="${t.nombreTipoProducto}"></option>
-          </select>
-          </form>
-        </div>
-
         <div th:if="${exito}" class="alert alert-success alert-dismissible fade show" role="alert">
           <i class="mdi mdi-check-all me-2"></i>
           <span th:text="${exito}"></span>
@@ -62,7 +50,7 @@
               <div class="card-body">
                 <th:block th:if="${fragmento == 'tabla'}">
                   <div class="d-flex flex-row-reverse mb-2">
-                    <a th:href="@{/producto/formulario-registro}" class="btn btn-success">
+                    <a th:href="@{/tipo-producto/formulario-registro}" class="btn btn-success">
                       Registrar
                       <i class="fas fa-pen-alt"></i>
                     </a>
@@ -71,24 +59,23 @@
                     <thead>
                     <tr>
                       <th>Id</th>
-                      <th>Nombre del Producto</th>
-                      <th>Costo en Bs.</th>
+                      <th>Tipo de habitación</th>
                       <th>Operaciones</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="p : ${listaProductos}">
-                      <td th:text="${p.idProducto}"></td>
-                      <td th:text="${p.nombreProducto}"></td>
-                      <td th:text="${p.precio}"></td>
+                    <tr th:each="t : ${listaTiposHabitaciones}">
+                      <td th:text="${t.idTipoHabitacion}"></td>
+                      <td th:text="${t.nombreTipoHabitacion}"></td>
+
                       <td>
-                        <a th:href="@{/producto/formulario-modificar/{id}(id=${p.idProducto})}"
+                        <a th:href="@{/tipo-habitacion/formulario-modificar/{id}(id=${t.idTipoHabitacion})}"
                            class="btn btn-primary btn-rounded waves-effect waves-light" data-bs-toggle="tooltip"
                            data-bs-placement="top" title="Modificar">
                           <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form th:action="@{/producto/eliminar}" method="POST" class="d-inline">
-                          <input type="hidden" th:value="${p.idProducto}" name="idProducto">
+                        <form th:action="@{/tipo-habitacion/eliminar}" method="POST" class="d-inline">
+                          <input type="hidden" th:value="${t.idTipoHabitacion}" name="idTipoHabitacion">
                           <button type="submit"
                                   class="btn btn-danger btn-rounded waves-effect waves-light
                                   btn-eliminar" data-bs-toggle="tooltip"
@@ -102,40 +89,26 @@
                   </table>
                 </th:block>
                 <th:block th:if="${fragmento} == 'formulario'">
-                  <form th:action="@{${tipoFormulario == 'registrar'? '/producto/registrar': '/producto/modificar'}}"
-                        th:object="${producto}" method="post">
+                  <form th:action="@{${tipoFormulario == 'registrar'? '/tipo-habitacion/registrar': '/tipo-habitacion/modificar'}}"
+                        th:object="${tipoHabitacion}" method="post">
 
-                    <input type="hidden" th:field="*{idProducto}">
+                    <input type="hidden" th:field="*{idTipoHabitacion}">
                     <input type="hidden" th:field="*{estado}">
                     <input type="hidden" th:filed="*{fechaRegistro}">
 
+
                     <div class="row mb-4">
-                      <h4 class="fw-bold">Productos</h4>
+                      <h4 class="fw-bold">Datos del Tipo de producto</h4>
                       <div class="col-lg-4 mb-2">
-                        <label for="nombre" class="form-label">Nombres: </label>
-                        <input type="text" class="form-control" id="nombre"
-                               placeholder="..."
-                               th:field="*{nombreProducto}">
+                        <label for="nombreTipoProducto" class="form-label">Nombres: </label>
+                        <input type="text" class="form-control"
+                               placeholder="..." id="nombreTipoProducto"
+                               th:field="*{nombreTipoHabitacion}">
                       </div>
-                      <div class="col-lg-4 mb-2">
-                        <label for="precio" class="form-label">Precio en Bs: </label>
-                        <input type="text" class="form-control" id="precio"
-                               placeholder="..."
-                               th:field="*{precio}">
-                      </div>
-                      <div class="col-lg-4 mb-2">
-                        <label for="tipo" class="form-label">Tipo de producto: </label>
-                        <select type="text" class="form-select" id="tipo"
-                                th:field="*{tipoProducto.idTipoProducto}">
-                          <option selected hidden value="">--SELECCIONE--</option>
-                          <option th:each="t : ${listaTiposProductos}"
-                                  th:value="${t.idTipoProducto}" th:text="${t.nombreTipoProducto}"></option>
-                        </select>
-                      </div>
-                      <div class="d-flex justify-content-end">
+                      <div class="d-flex flex-row-reverse">
                         <button type="submit"
                                 class="btn waves-effect btn-label waves-light"
-                                th:classappend="${tipoFormulario == 'registrar' ? 'btn-success btn-registrar-producto' : 'btn-primary btn-modificar-producto'}">
+                                th:classappend="${tipoFormulario == 'registrar' ? 'btn-success btn-registrar' : 'btn-primary btn-modificar'}">
                           <i class="bx bx-paper-plane label-icon"></i>
                           <span th:text="${tipoFormulario == 'registrar' ? 'Registrar' : 'Modificar'}"></span>
                         </button>
@@ -166,7 +139,7 @@
   <!--  <script th:src="@{/assets/libs/font-awesome/js/all.min.js}"></script>-->
   <!-- dashboard init -->
   <script th:src="@{/assets/libs/sweetalert2/sweetalert2.min.js}"></script>
-
+  <script th:src="@{/app/botones-crud.js}"></script>
 
   <th:block th:if="${fragmento == 'tabla'}">
     <!-- Required datatable js -->
@@ -185,46 +158,44 @@
     <!-- Responsive examples -->
     <script th:src="@{/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js}"></script>
     <script th:src="@{/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js}"></script>
-
-    <script th:inline="javascript">
+    <script>
       $(document).ready(function () {
-        $("#datatable").DataTable({language: {
+        $("#datatable").DataTable({
+          language: {
             url: "/assets/libs/datatables.net/js/dataTable-es-ES.json"
           },
           lengthMenu: [10, 20, 50, 100]
         });
-
-        $('#ordenTipoProducto').on('change', function (){
-          $(this).closest('form').submit();
-        });
       })
     </script>
   </th:block>
+
   <th:block th:if="${fragmento == 'formulario'}">
-    <script th:src="@{/app/botones-crud.js}"></script>
     <script>
-      const configFormularioModificar = {
-        selector: '.btn-modificar-producto',
-        tipoEvento: 'click',
-        titulo: 'Modificar producto',
-        textoAlerta: 'Estas seguro de modificar el producto?',
-        textoBoton: 'Si, modificar producto'
-      }
+      $(document).ready(function () {
+        const configFormularioRegistrar = {
+          selector: '.btn-registrar',
+          tipoEvento: 'click',
+          titulo: 'Registro de nuevo tipo de producto',
+          textoAlerta: 'Estas seguro de registrar el tipo de habitación?',
+          textoBoton: 'Si, registrar tipo de habitación'
+        }
 
-      const configFormularioRegistrar = {
-        selector: '.btn-registrar-producto',
-        tipoEvento: 'click',
-        titulo: 'Registrar producto',
-        textoAlerta: 'Estas seguro de registrar el producto?',
-        textoBoton: 'Si, registrar producto'
-      }
+        const configFormularioModificar = {
+          selector: '.btn-modificar',
+          tipoEvento: 'click',
+          titulo: 'Modificar tipo de habitación',
+          textoAlerta: 'Estas seguro de modificar el tipo de habitación?',
+          textoBoton: 'Si, modificar tipo de habitación'
+        }
 
-      alertaEnviarFormulario(configFormularioRegistrar);
-      alertaEnviarFormulario(configFormularioModificar);
+        alertaEnviarFormulario(configFormularioRegistrar);
+        alertaEnviarFormulario(configFormularioModificar);
+      })
     </script>
   </th:block>
-
 </th:block>
+
 
 </body>
 

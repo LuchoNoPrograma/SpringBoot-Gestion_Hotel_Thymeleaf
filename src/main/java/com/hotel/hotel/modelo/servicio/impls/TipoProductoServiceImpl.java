@@ -4,6 +4,7 @@ import com.hotel.hotel.modelo.dao.ITipoProductoDao;
 import com.hotel.hotel.modelo.entidad.TipoProducto;
 import com.hotel.hotel.modelo.servicio.interfaces.ITipoProductoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class TipoProductoServiceImpl implements ITipoProductoService {
   }
 
   @Override
-  public List<TipoProducto> findAll() {
-    return tipoProductoDao.findAll();
+  public List<TipoProducto> findAllDistinctEliminado(Sort sort){
+    return tipoProductoDao.findAllDistinctEliminado(sort);
   }
 }

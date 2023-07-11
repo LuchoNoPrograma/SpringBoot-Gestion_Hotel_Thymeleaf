@@ -1,5 +1,6 @@
 package com.hotel.hotel.controlador;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +27,12 @@ public class TipoProductoController {
     @GetMapping("/lista")
     public String lista(Model model){
         model.addAttribute("template", "layout");
-        model.addAttribute("title", "Lista de Tipos de productos");
+        model.addAttribute("title", "Lista de tipos de productos");
         model.addAttribute("fragmento", "tabla");
-        model.addAttribute("listaTipoProductos", tipoProductoService.findAll());
+        Sort orden = Sort.by("nombreTipoHabitacion");
+        model.addAttribute("listaTipoProductos", tipoProductoService.findAllDistinctEliminado(orden));
         
-        return "app/tipo-producto";
+        return "app/tipo-habitacion";
     }
 
     @GetMapping("/formulario-registro")
@@ -61,7 +63,7 @@ public class TipoProductoController {
     tipoProducto.setEstado(Estado.ELIMINADO);
     tipoProductoService.save(tipoProducto);
     flash.addFlashAttribute("exito", "Tipo producto ha sido eliminado exitosamente");
-    return "redirect:/tipo-producto/inicio";
+    return "redirect:/tipo-producto/lista";
   }
     
     @PostMapping("/registrar")

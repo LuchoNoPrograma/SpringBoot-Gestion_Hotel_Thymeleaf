@@ -7,24 +7,20 @@
   <title>Sistema de Gestión Hotelera</title>
 </head>
 <th:block layout:fragment="pagecss">
-  <!-- DataTables -->
-  <link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.boot  strap4.min.css}" rel="stylesheet"
-        type="text/css"/>
-  <link th:href="@{/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css}" rel="stylesheet"
-        type="text/css"/>
+  <th:block th:if="${fragmento == 'tabla'}">
+    <!-- DataTables -->
+    <link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.boot  strap4.min.css}" rel="stylesheet"
+          type="text/css"/>
+    <link th:href="@{/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css}" rel="stylesheet"
+          type="text/css"/>
+    <!-- Responsive datatable examples -->
+    <link th:href="@{/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet"
+          type="text/css"/>
+  </th:block>
 
-  <!--  Font awesome-->
-  <!--  <link rel="stylesheet" th:href="@{/assets/libs/font-awesome/css/all.min.css}"-->
-  <!--        type="text/css">-->
-
+  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" th:href="@{/assets/css/icons.min.css}"
         type="text/css">
-
-  <!-- Responsive datatable examples -->
-  <link th:href="@{/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet"
-        type="text/css"/>
-  <link th:href="@{/assets/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
-
 </th:block>
 <body>
 

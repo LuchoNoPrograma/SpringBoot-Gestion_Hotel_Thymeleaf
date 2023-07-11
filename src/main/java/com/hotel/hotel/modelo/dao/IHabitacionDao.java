@@ -17,7 +17,7 @@ public interface IHabitacionDao extends JpaRepository<Habitacion, Long> {
           WHERE h.estado != 'ELIMINADO' AND h.estadoHabitacion = ?1
           ORDER BY h.nroHabitacion
           """)
-  List<Habitacion> findAllDistinctEliminadoByEstadoHabitacion(EstadoHabitacion estadoHabitacion);
+  List<Habitacion> findAllDistinctEliminadoByEstadoHabitacion(EstadoHabitacion estadoHabitacion, Sort sort);
 
   @Query("SELECT h FROM Habitacion h WHERE h.estado != 'ELIMINADO'")
   List<Habitacion> findAllDistinctEliminado(Sort sort);

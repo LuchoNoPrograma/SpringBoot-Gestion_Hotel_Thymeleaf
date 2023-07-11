@@ -18,5 +18,5 @@ public class TipoDocumento extends Auditoria{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTipoDocumento;
-    private String tipoDocumento;
+    private String nombreTipoDocumento;
 }

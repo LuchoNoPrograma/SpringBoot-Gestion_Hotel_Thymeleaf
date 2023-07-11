@@ -10,4 +10,8 @@ public interface IProductoService {
   List<Producto> findAll(Sort sort);
   Producto findById(Long id);
   List<Producto> findAllLikeNombreProducto(String nombreProducto);
+
+  List<Producto> findAllByTipoProducto(Long idTipoProducto, Sort sort);
+
+  List<Producto> findAllDistinctEliminado(Sort sort);
 }

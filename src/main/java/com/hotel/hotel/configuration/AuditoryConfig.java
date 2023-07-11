@@ -2,8 +2,12 @@ package com.hotel.hotel.configuration;
 
 
 import com.hotel.hotel.modelo.entidad.Auditoria;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+import java.util.Optional;
 
 /**
  * @EnableJpaAuditing permite detectar toda transaction de guardar o modificar
@@ -17,7 +21,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  */
 @Configuration
 //@EnableJpaAuditing(auditorAwareRef = "auditarIdUsuario")
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = "auditarProceso")
 public class AuditoryConfig {
   /**
    * AuditorAware<T> es Una interfaz que utiliza JPA para manejar QUIEN REALIZO UNA OPERACION en la BD
@@ -60,4 +64,9 @@ public class AuditoryConfig {
       }
     };
   }*/
+
+  @Bean
+  AuditorAware<String> auditarProceso(){
+    return () -> Optional.empty();
+  }
 }
