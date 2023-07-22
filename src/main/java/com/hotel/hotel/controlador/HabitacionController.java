@@ -61,7 +61,7 @@ public class HabitacionController {
   @GetMapping("/formulario-registrar")
   public String mostrarFormulario(@ModelAttribute Habitacion habitacion, Model model){
     model.addAttribute("template", "layout");
-    model.addAttribute("title", "Lista de empleados");
+    model.addAttribute("title", "registro de habitacion");
 
     model.addAttribute("listaTiposHabitaciones", tipoHabitacionService.findAllDistinctEliminado(Sort.by("nombreTipoHabitacion")));
     model.addAttribute("habitacion", new Habitacion());

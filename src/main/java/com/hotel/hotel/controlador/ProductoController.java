@@ -46,7 +46,7 @@ public class ProductoController {
     }
     model.addAttribute("listaTiposProductos", listaTipoProductos);
     model.addAttribute("template", "layout");
-    model.addAttribute("title", "Lista de empleados");
+    model.addAttribute("title", "Lista de productos");
     model.addAttribute("listaProductos", listaProductos);
     model.addAttribute("fragmento", "tabla");
     return "app/producto";
